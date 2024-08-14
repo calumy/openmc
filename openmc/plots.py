@@ -1331,7 +1331,7 @@ class ProjectionPlot(PlotBase):
         # Set masking information
         mask_elem = elem.find("mask")
         if mask_elem is not None:
-            mask_components = [int(x) for x in mask_elem.get("components").split()]
+            mask_components = [int(x) for x in mask_elem.get("components").split()]  # noqa: F841
             # TODO: set mask components (needs geometry information)
             background = mask_elem.get("background")
             if background is not None:

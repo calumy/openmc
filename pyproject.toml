@@ -77,3 +77,11 @@ openmc-voxel-to-vtk = "scripts.openmc_voxel_to_vtk:main"
 
 [tool.ruff]
 target-version = "py311" # Leave this as 3.11 to ensure this repo is compatible with the minimum supported version of Python within CORE POWER which is 3.11 in the WEB APP repo
+
+[tool.ruff.lint]
+ignore = [
+  "E741", # Ambiguous variable name
+  "E402", # Module level import not at top of file
+  "F401", # Module imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  "F403", # 'from module import *' used; unable to detect undefined names
+]

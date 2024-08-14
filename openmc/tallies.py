@@ -2850,7 +2850,7 @@ class Tally(IDManagerMixin):
 
             # Sum across the bins in the user-specified filter
             for i, self_filter in enumerate(self.filters):
-                if type(self_filter) == filter_type:
+                if isinstance(self_filter, filter_type):
                     shape = mean.shape
                     mean = np.take(mean, indices=bin_indices, axis=i)
                     std_dev = np.take(std_dev, indices=bin_indices, axis=i)

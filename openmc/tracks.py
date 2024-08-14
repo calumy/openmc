@@ -169,7 +169,7 @@ class Track(Sequence):
 
         # Setup axes is one wasn't passed
         if axes is None:
-            fig = plt.figure()
+            plt.figure()
             ax = plt.axes(projection="3d")
             ax.set_xlabel("x [cm]")
             ax.set_ylabel("y [cm]")
@@ -269,7 +269,7 @@ class Tracks(list):
         """
         import matplotlib.pyplot as plt
 
-        fig = plt.figure()
+        plt.figure()
         ax = plt.axes(projection="3d")
         ax.set_xlabel("x [cm]")
         ax.set_ylabel("y [cm]")
