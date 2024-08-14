@@ -28,4 +28,4 @@ jobs:
       - name: Run Pre-commit - manual
         env:
           PRE_COMMIT_COLOR: always
-        run: pre_commit run --all-files --hook-stage manual --verbose
+        run: pre-commit run --all-files --hook-stage manual --verbose
