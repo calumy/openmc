@@ -4,48 +4,48 @@ requires = ["setuptools", "wheel", "numpy", "cython"]
 [project]
 name = "openmc"
 authors = [
-    {name = "The OpenMC Development Team", email = "openmc@anl.gov"},
+  { name = "The OpenMC Development Team", email = "openmc@anl.gov" },
 ]
 description = "OpenMC"
 version = "0.15.1-dev"
 requires-python = ">=3.10"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Intended Audience :: End Users/Desktop",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Topic :: Scientific/Engineering",
-    "Programming Language :: C++",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Topic :: Scientific/Engineering",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "numpy",
-    "h5py",
-    "scipy",
-    "ipython",
-    "matplotlib",
-    "pandas",
-    "lxml",
-    "uncertainties",
-    "setuptools",
-    "endf",
+  "numpy",
+  "h5py",
+  "scipy",
+  "ipython",
+  "matplotlib",
+  "pandas",
+  "lxml",
+  "uncertainties",
+  "setuptools",
+  "endf",
 ]
 
 [project.optional-dependencies]
 depletion-mpi = ["mpi4py"]
 docs = [
-    "sphinx==5.0.2",
-    "sphinxcontrib-katex",
-    "sphinx-numfig",
-    "jupyter",
-    "sphinxcontrib-svg2pdfconverter",
-    "sphinx-rtd-theme==1.0.0"
+  "sphinx==5.0.2",
+  "sphinxcontrib-katex",
+  "sphinx-numfig",
+  "jupyter",
+  "sphinxcontrib-svg2pdfconverter",
+  "sphinx-rtd-theme==1.0.0",
 ]
 test = ["packaging", "pytest", "pytest-cov", "colorama", "openpyxl"]
 ci = ["cpp-coveralls", "coveralls"]
@@ -85,3 +85,4 @@ ignore = [
   "F401", # Module imported but unused; consider removing, adding to `__all__`, or using a redundant alias
   "F403", # 'from module import *' used; unable to detect undefined names
 ]
+select = ["E4", "E7", "E9", "F", "UP"]
