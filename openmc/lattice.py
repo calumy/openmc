@@ -1252,8 +1252,8 @@ class HexLattice(Lattice):
             for rings in self._universes:
                 if len(rings) != self._num_rings:
                     msg = (
-                        "HexLattice ID={0:d} has an inconsistent number of "
-                        "rings per axial position".format(self._id)
+                        f"HexLattice ID={self._id:d} has an inconsistent number of "
+                        "rings per axial position"
                     )
                     raise ValueError(msg)
 
@@ -1266,9 +1266,9 @@ class HexLattice(Lattice):
                 # Check the center ring.
                 if len(axial_slice[-1]) != 1:
                     msg = (
-                        "HexLattice ID={0:d} has the wrong number of "
+                        f"HexLattice ID={self._id:d} has the wrong number of "
                         "elements in the innermost ring. Only 1 element is "
-                        "allowed in the innermost ring.".format(self._id)
+                        "allowed in the innermost ring."
                     )
                     raise ValueError(msg)
 
@@ -1276,12 +1276,10 @@ class HexLattice(Lattice):
                 for r in range(self._num_rings - 1):
                     if len(axial_slice[r]) != 6 * (self._num_rings - 1 - r):
                         msg = (
-                            "HexLattice ID={0:d} has the wrong number of "
-                            "elements in ring number {1:d} (counting from the "
-                            "outermost ring). This ring should have {2:d} "
-                            "elements.".format(
-                                self._id, r, 6 * (self._num_rings - 1 - r)
-                            )
+                            f"HexLattice ID={self._id:d} has the wrong number of "
+                            f"elements in ring number {r:d} (counting from the "
+                            f"outermost ring). This ring should have {6 * (self._num_rings - 1 - r):d} "
+                            "elements."
                         )
                         raise ValueError(msg)
 
@@ -1290,9 +1288,9 @@ class HexLattice(Lattice):
             # Check the center ring.
             if len(axial_slice[-1]) != 1:
                 msg = (
-                    "HexLattice ID={0:d} has the wrong number of "
+                    f"HexLattice ID={self._id:d} has the wrong number of "
                     "elements in the innermost ring.  Only 1 element is "
-                    "allowed in the innermost ring.".format(self._id)
+                    "allowed in the innermost ring."
                 )
                 raise ValueError(msg)
 
@@ -1300,10 +1298,10 @@ class HexLattice(Lattice):
             for r in range(self._num_rings - 1):
                 if len(axial_slice[r]) != 6 * (self._num_rings - 1 - r):
                     msg = (
-                        "HexLattice ID={0:d} has the wrong number of "
-                        "elements in ring number {1:d} (counting from the "
-                        "outermost ring).  This ring should have {2:d} "
-                        "elements.".format(self._id, r, 6 * (self._num_rings - 1 - r))
+                        f"HexLattice ID={self._id:d} has the wrong number of "
+                        f"elements in ring number {r:d} (counting from the "
+                        f"outermost ring).  This ring should have {6 * (self._num_rings - 1 - r):d} "
+                        "elements."
                     )
                     raise ValueError(msg)
 

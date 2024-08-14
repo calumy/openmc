@@ -347,7 +347,7 @@ def make_ace(
     else:
         output_dir = Path(output_dir)
         if not output_dir.is_dir():
-            raise IOError(f"{output_dir} is not a directory")
+            raise OSError(f"{output_dir} is not a directory")
 
     ev = evaluation if evaluation is not None else endf.Evaluation(filename)
     mat = ev.material
@@ -523,7 +523,7 @@ def make_ace_thermal(
     else:
         output_dir = Path(output_dir)
         if not output_dir.is_dir():
-            raise IOError(f"{output_dir} is not a directory")
+            raise OSError(f"{output_dir} is not a directory")
 
     ev = evaluation if evaluation is not None else endf.Evaluation(filename)
     mat = ev.material

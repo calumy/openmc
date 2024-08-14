@@ -268,7 +268,7 @@ class Geometry:
     def from_xml(
         cls,
         path: PathLike = "geometry.xml",
-        materials: PathLike | "openmc.Materials" | None = "materials.xml",
+        materials: PathLike | openmc.Materials | None = "materials.xml",
     ) -> Geometry:
         """Generate geometry from XML file
 

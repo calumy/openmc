@@ -48,17 +48,11 @@ class Product(EqualityMixin):
     def __repr__(self):
         if isinstance(self.yield_, Tabulated1D):
             if np.all(self.yield_.y == self.yield_.y[0]):
-                return "<Product: {}, emission={}, yield={}>".format(
-                    self.particle, self.emission_mode, self.yield_.y[0]
-                )
+                return f"<Product: {self.particle}, emission={self.emission_mode}, yield={self.yield_.y[0]}>"
             else:
-                return "<Product: {}, emission={}, yield=tabulated>".format(
-                    self.particle, self.emission_mode
-                )
+                return f"<Product: {self.particle}, emission={self.emission_mode}, yield=tabulated>"
         else:
-            return "<Product: {}, emission={}, yield=polynomial>".format(
-                self.particle, self.emission_mode
-            )
+            return f"<Product: {self.particle}, emission={self.emission_mode}, yield=polynomial>"
 
     @property
     def applicability(self):

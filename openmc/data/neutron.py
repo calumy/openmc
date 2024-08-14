@@ -286,8 +286,8 @@ class IncidentNeutron(EqualityMixin):
                 self[mt].xs[strT] = data[mt].xs[strT]
             else:
                 warn(
-                    "Tried to add cross sections for MT={} at T={} but this "
-                    "reaction doesn't exist.".format(mt, strT)
+                    f"Tried to add cross sections for MT={mt} at T={strT} but this "
+                    "reaction doesn't exist."
                 )
 
         # Add probability tables
@@ -535,11 +535,9 @@ class IncidentNeutron(EqualityMixin):
                 major, minor = h5file.attrs["version"]
                 # For now all versions of HDF5 data can be read
             else:
-                raise IOError(
+                raise OSError(
                     "HDF5 data does not indicate a version. Your installation of "
-                    "the OpenMC Python API expects version {}.x data.".format(
-                        HDF5_VERSION_MAJOR
-                    )
+                    f"the OpenMC Python API expects version {HDF5_VERSION_MAJOR}.x data."
                 )
 
             group = list(h5file.values())[0]
@@ -679,8 +677,8 @@ class IncidentNeutron(EqualityMixin):
             if mt not in data:
                 if mt not in SUM_RULES:
                     warn(
-                        "Photon production is present for MT={} but no "
-                        "cross section is given.".format(mt)
+                        f"Photon production is present for MT={mt} but no "
+                        "cross section is given."
                     )
                     continue
 
@@ -688,8 +686,8 @@ class IncidentNeutron(EqualityMixin):
                 mts = data.get_reaction_components(mt)
                 if len(mts) == 0:
                     warn(
-                        "Photon production is present for MT={} but no "
-                        "reaction components exist.".format(mt)
+                        f"Photon production is present for MT={mt} but no "
+                        "reaction components exist."
                     )
                     continue
 

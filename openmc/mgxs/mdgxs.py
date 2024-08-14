@@ -712,12 +712,8 @@ class MDGXS(MGXS):
                             for azi in range(len(azimuthal_bins) - 1):
                                 azi_low, azi_high = azimuthal_bins[azi : azi + 2]
                                 string += (
-                                    "\t\tPolar Angle: [{0:5f} - {1:5f}]".format(
-                                        pol_low, pol_high
-                                    )
-                                    + "\tAzimuthal Angle: [{0:5f} - {1:5f}]".format(
-                                        azi_low, azi_high
-                                    )
+                                    f"\t\tPolar Angle: [{pol_low:5f} - {pol_high:5f}]"
+                                    + f"\tAzimuthal Angle: [{azi_low:5f} - {azi_high:5f}]"
                                     + "\n"
                                 )
                                 for group in range(1, self.num_groups + 1):
@@ -725,10 +721,7 @@ class MDGXS(MGXS):
                                     string += "\t" + template.format(
                                         "", group, bounds[0], bounds[1]
                                     )
-                                    string += "{0:.2e} +/- {1:.2e}%".format(
-                                        average_xs[pol, azi, group - 1],
-                                        rel_err_xs[pol, azi, group - 1],
-                                    )
+                                    string += f"{average_xs[pol, azi, group - 1]:.2e} +/- {rel_err_xs[pol, azi, group - 1]:.2e}%"
                                     string += "\n"
                                 string += "\n"
                     else:
@@ -736,9 +729,7 @@ class MDGXS(MGXS):
                         for group in range(1, self.num_groups + 1):
                             bounds = self.energy_groups.get_group_bounds(group)
                             string += template.format("", group, bounds[0], bounds[1])
-                            string += "{0:.2e} +/- {1:.2e}%".format(
-                                average_xs[group - 1], rel_err_xs[group - 1]
-                            )
+                            string += f"{average_xs[group - 1]:.2e} +/- {rel_err_xs[group - 1]:.2e}%"
                             string += "\n"
                     string += "\n"
                 string += "\n"
@@ -816,7 +807,7 @@ class MDGXS(MGXS):
             df.to_latex(filename + ".tex", bold_rows=True, longtable=True, index=False)
 
             # Surround LaTeX table with code needed to run pdflatex
-            with open(filename + ".tex", "r") as original:
+            with open(filename + ".tex") as original:
                 data = original.read()
             with open(filename + ".tex", "w") as modified:
                 modified.write(
@@ -2752,12 +2743,8 @@ class MatrixMDGXS(MDGXS):
                                 for azi in range(len(azi_bins) - 1):
                                     azi_low, azi_high = azi_bins[azi : azi + 2]
                                     string += (
-                                        "\t\tPolar Angle: [{0:5f} - {1:5f}]".format(
-                                            pol_low, pol_high
-                                        )
-                                        + "\tAzimuthal Angle: [{0:5f} - {1:5f}]".format(
-                                            azi_low, azi_high
-                                        )
+                                        f"\t\tPolar Angle: [{pol_low:5f} - {pol_high:5f}]"
+                                        + f"\tAzimuthal Angle: [{azi_low:5f} - {azi_high:5f}]"
                                         + "\n"
                                     )
                                     for in_group in range(1, self.num_groups + 1):
@@ -2787,10 +2774,7 @@ class MatrixMDGXS(MDGXS):
                             for in_group in range(1, self.num_groups + 1):
                                 for out_group in range(1, self.num_groups + 1):
                                     string += template.format("", in_group, out_group)
-                                    string += "{:.2e} +/- {:.2e}%".format(
-                                        average_xs[in_group - 1, out_group - 1],
-                                        rel_err_xs[in_group - 1, out_group - 1],
-                                    )
+                                    string += f"{average_xs[in_group - 1, out_group - 1]:.2e} +/- {rel_err_xs[in_group - 1, out_group - 1]:.2e}%"
                                     string += "\n"
                                 string += "\n"
                         string += "\n"
@@ -2818,12 +2802,8 @@ class MatrixMDGXS(MDGXS):
                             for azi in range(len(azi_bins) - 1):
                                 azi_low, azi_high = azi_bins[azi : azi + 2]
                                 string += (
-                                    "\t\tPolar Angle: [{0:5f} - {1:5f}]".format(
-                                        pol_low, pol_high
-                                    )
-                                    + "\tAzimuthal Angle: [{0:5f} - {1:5f}]".format(
-                                        azi_low, azi_high
-                                    )
+                                    f"\t\tPolar Angle: [{pol_low:5f} - {pol_high:5f}]"
+                                    + f"\tAzimuthal Angle: [{azi_low:5f} - {azi_high:5f}]"
                                     + "\n"
                                 )
                                 for in_group in range(1, self.num_groups + 1):
@@ -2847,10 +2827,7 @@ class MatrixMDGXS(MDGXS):
                         for in_group in range(1, self.num_groups + 1):
                             for out_group in range(1, self.num_groups + 1):
                                 string += template.format("", in_group, out_group)
-                                string += "{0:.2e} +/- {1:.2e}%".format(
-                                    average_xs[in_group - 1, out_group - 1],
-                                    rel_err_xs[in_group - 1, out_group - 1],
-                                )
+                                string += f"{average_xs[in_group - 1, out_group - 1]:.2e} +/- {rel_err_xs[in_group - 1, out_group - 1]:.2e}%"
                                 string += "\n"
                             string += "\n"
                     string += "\n"

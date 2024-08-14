@@ -210,9 +210,7 @@ class Filter(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A filter with ID={} has already " "been allocated.".format(
-                                uid
-                            )
+                            f"A filter with ID={uid} has already " "been allocated."
                         )
 
                 # Set the filter type -- note that the filter_type attribute

@@ -449,7 +449,7 @@ def get_evaluations(filename):
 
     """
     evaluations = []
-    with open(str(filename), "r") as fh:
+    with open(str(filename)) as fh:
         while True:
             pos = fh.tell()
             line = fh.readline()
@@ -487,7 +487,7 @@ class Evaluation:
 
     def __init__(self, filename_or_obj):
         if isinstance(filename_or_obj, (str, PurePath)):
-            fh = open(str(filename_or_obj), "r")
+            fh = open(str(filename_or_obj))
             need_to_close = True
         else:
             fh = filename_or_obj

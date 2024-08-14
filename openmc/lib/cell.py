@@ -133,9 +133,7 @@ class Cell(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A cell with ID={} has already " "been allocated.".format(
-                                uid
-                            )
+                            f"A cell with ID={uid} has already " "been allocated."
                         )
 
                 index = c_int32()

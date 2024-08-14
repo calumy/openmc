@@ -148,12 +148,12 @@ class Material(IDManagerMixin):
         string += "{: <16}\n".format("\tNuclides")
 
         for nuclide, percent, percent_type in self._nuclides:
-            string += "{: <16}".format("\t{}".format(nuclide))
+            string += "{: <16}".format(f"\t{nuclide}")
             string += f"=\t{percent: <12} [{percent_type}]\n"
 
         if self._macroscopic is not None:
             string += "{: <16}\n".format("\tMacroscopic Data")
-            string += "{: <16}".format("\t{}".format(self._macroscopic))
+            string += "{: <16}".format(f"\t{self._macroscopic}")
 
         return string
 
@@ -473,7 +473,7 @@ class Material(IDManagerMixin):
                 self._atoms = volume_calc.atoms[self.id]
             else:
                 raise ValueError(
-                    "No volume information found for material ID={}.".format(self.id)
+                    f"No volume information found for material ID={self.id}."
                 )
         else:
             raise ValueError(f"No volume information found for material ID={self.id}.")
@@ -497,16 +497,16 @@ class Material(IDManagerMixin):
         if units == "sum":
             if density is not None:
                 msg = (
-                    'Density "{}" for Material ID="{}" is ignored '
-                    'because the unit is "sum"'.format(density, self.id)
+                    f'Density "{density}" for Material ID="{self.id}" is ignored '
+                    'because the unit is "sum"'
                 )
                 warnings.warn(msg)
         else:
             if density is None:
                 msg = (
-                    'Unable to set the density for Material ID="{}" '
+                    f'Unable to set the density for Material ID="{self.id}" '
                     "because a density value must be given when not using "
-                    '"sum" unit'.format(self.id)
+                    '"sum" unit'
                 )
                 raise ValueError(msg)
 
@@ -533,8 +533,8 @@ class Material(IDManagerMixin):
 
         if self._macroscopic is not None:
             msg = (
-                'Unable to add a Nuclide to Material ID="{}" as a '
-                "macroscopic data-set has already been added".format(self._id)
+                f'Unable to add a Nuclide to Material ID="{self._id}" as a '
+                "macroscopic data-set has already been added"
             )
             raise ValueError(msg)
 
@@ -653,17 +653,17 @@ class Material(IDManagerMixin):
         # incompatible with macroscopics
         if self._nuclides or self._sab:
             msg = (
-                'Unable to add a Macroscopic data set to Material ID="{}" '
-                'with a macroscopic value "{}" as an incompatible data '
+                f'Unable to add a Macroscopic data set to Material ID="{self._id}" '
+                f'with a macroscopic value "{macroscopic}" as an incompatible data '
                 "member (i.e., nuclide or S(a,b) table) "
-                "has already been added".format(self._id, macroscopic)
+                "has already been added"
             )
             raise ValueError(msg)
 
         if not isinstance(macroscopic, str):
             msg = (
-                'Unable to add a Macroscopic to Material ID="{}" with a '
-                'non-string value "{}"'.format(self._id, macroscopic)
+                f'Unable to add a Macroscopic to Material ID="{self._id}" with a '
+                f'non-string value "{macroscopic}"'
             )
             raise ValueError(msg)
 
@@ -671,9 +671,9 @@ class Material(IDManagerMixin):
             self._macroscopic = macroscopic
         else:
             msg = (
-                'Unable to add a Macroscopic to Material ID="{}". '
+                f'Unable to add a Macroscopic to Material ID="{self._id}". '
                 "Only one Macroscopic allowed per "
-                "Material.".format(self._id)
+                "Material."
             )
             raise ValueError(msg)
 
@@ -697,8 +697,8 @@ class Material(IDManagerMixin):
 
         if not isinstance(macroscopic, str):
             msg = (
-                'Unable to remove a Macroscopic "{}" in Material ID="{}" '
-                "since it is not a string".format(self._id, macroscopic)
+                f'Unable to remove a Macroscopic "{self._id}" in Material ID="{macroscopic}" '
+                "since it is not a string"
             )
             raise ValueError(msg)
 
@@ -789,25 +789,23 @@ class Material(IDManagerMixin):
 
         if self._macroscopic is not None:
             msg = (
-                'Unable to add an Element to Material ID="{}" as a '
-                "macroscopic data-set has already been added".format(self._id)
+                f'Unable to add an Element to Material ID="{self._id}" as a '
+                "macroscopic data-set has already been added"
             )
             raise ValueError(msg)
 
         if enrichment is not None and enrichment_target is None:
             if not isinstance(enrichment, Real):
                 msg = (
-                    'Unable to add an Element to Material ID="{}" with a '
-                    'non-floating point enrichment value "{}"'.format(
-                        self._id, enrichment
-                    )
+                    f'Unable to add an Element to Material ID="{self._id}" with a '
+                    f'non-floating point enrichment value "{enrichment}"'
                 )
                 raise ValueError(msg)
 
             elif element != "U":
                 msg = (
-                    "Unable to use enrichment for element {} which is not "
-                    'uranium for Material ID="{}"'.format(element, self._id)
+                    f"Unable to use enrichment for element {element} which is not "
+                    f'uranium for Material ID="{self._id}"'
                 )
                 raise ValueError(msg)
 
@@ -817,13 +815,11 @@ class Material(IDManagerMixin):
 
             if enrichment > 5.0:
                 msg = (
-                    "A uranium enrichment of {} was given for Material ID="
-                    '"{}". OpenMC assumes the U234/U235 mass ratio is '
+                    f"A uranium enrichment of {enrichment} was given for Material ID="
+                    f'"{self._id}". OpenMC assumes the U234/U235 mass ratio is '
                     "constant at 0.008, which is only valid at low "
                     "enrichments. Consider setting the isotopic "
-                    "composition manually for enrichments over 5%.".format(
-                        enrichment, self._id
-                    )
+                    "composition manually for enrichments over 5%."
                 )
                 warnings.warn(msg)
 
@@ -883,7 +879,7 @@ class Material(IDManagerMixin):
         if "." in formula:
             msg = (
                 "Non-integer multiplier values are not accepted. The "
-                'input formula {} contains a "." character.'.format(formula)
+                f'input formula {formula} contains a "." character.'
             )
             raise ValueError(msg)
 
@@ -899,7 +895,7 @@ class Material(IDManagerMixin):
                     msg = (
                         "Formula must be made from a sequence of "
                         "element symbols, integers, and brackets. "
-                        "{} is not an allowable entry.".format(token)
+                        f"{token} is not an allowable entry."
                     )
                     raise ValueError(msg)
 
@@ -907,7 +903,7 @@ class Material(IDManagerMixin):
         if formula.count("(") != formula.count(")"):
             msg = (
                 "Number of opening and closing brackets is not equal "
-                "in the input formula {}.".format(formula)
+                f"in the input formula {formula}."
             )
             raise ValueError(msg)
 
@@ -918,7 +914,7 @@ class Material(IDManagerMixin):
         if len(formula) != 0:
             msg = (
                 "Part of formula was not successfully parsed as an "
-                "element symbol, bracket or integer. {} was not parsed.".format(formula)
+                f"element symbol, bracket or integer. {formula} was not parsed."
             )
             raise ValueError(msg)
 
@@ -976,15 +972,15 @@ class Material(IDManagerMixin):
 
         if self._macroscopic is not None:
             msg = (
-                'Unable to add an S(a,b) table to Material ID="{}" as a '
-                "macroscopic data-set has already been added".format(self._id)
+                f'Unable to add an S(a,b) table to Material ID="{self._id}" as a '
+                "macroscopic data-set has already been added"
             )
             raise ValueError(msg)
 
         if not isinstance(name, str):
             msg = (
-                'Unable to add an S(a,b) table to Material ID="{}" with a '
-                'non-string table name "{}"'.format(self._id, name)
+                f'Unable to add an S(a,b) table to Material ID="{self._id}" with a '
+                f'non-string table name "{name}"'
             )
             raise ValueError(msg)
 
@@ -1539,13 +1535,13 @@ class Material(IDManagerMixin):
             if percent_type in ("ao", "wo"):
                 msg = (
                     "A non-zero void fraction is not acceptable for "
-                    "percent_type: {}".format(percent_type)
+                    f"percent_type: {percent_type}"
                 )
                 raise ValueError(msg)
             else:
                 msg = (
                     "Warning: sum of fractions do not add to 1, void "
-                    "fraction set to {}".format(void_frac)
+                    f"fraction set to {void_frac}"
                 )
                 warnings.warn(msg)
 

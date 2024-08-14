@@ -325,10 +325,8 @@ class AtomicRelaxation(EqualityMixin):
 
         # Atomic relaxation data is always MF=28, MT=533
         if (28, 533) not in ev.section:
-            raise IOError(
-                "{} does not appear to be an atomic relaxation " "sublibrary.".format(
-                    ev
-                )
+            raise OSError(
+                f"{ev} does not appear to be an atomic relaxation " "sublibrary."
             )
 
         # Determine number of subshells
@@ -630,9 +628,9 @@ class IncidentPhoton(EqualityMixin):
                 rx.subshell_binding_energy = e
         else:
             raise ValueError(
-                "ACE table {} does not have subshell data. Only "
+                f"ACE table {ace.name} does not have subshell data. Only "
                 "newer ACE photoatomic libraries are supported "
-                "(e.g., eprdata14).".format(ace.name)
+                "(e.g., eprdata14)."
             )
 
         # Add bremsstrahlung DCS data
@@ -733,11 +731,9 @@ class IncidentPhoton(EqualityMixin):
                 major, minor = h5file.attrs["version"]
                 # For now all versions of HDF5 data can be read
             else:
-                raise IOError(
+                raise OSError(
                     "HDF5 data does not indicate a version. Your installation "
-                    "of the OpenMC Python API expects version {}.x data.".format(
-                        HDF5_VERSION_MAJOR
-                    )
+                    f"of the OpenMC Python API expects version {HDF5_VERSION_MAJOR}.x data."
                 )
 
             group = list(h5file.values())[0]
@@ -898,7 +894,7 @@ class IncidentPhoton(EqualityMixin):
                     }
 
             filename = os.path.join(os.path.dirname(__file__), "BREMX.DAT")
-            with open(filename, "r") as fh:
+            with open(filename) as fh:
                 brem = fh.read().split()
 
             # Incident electron kinetic energy grid in eV
@@ -1068,9 +1064,7 @@ class PhotonReaction(EqualityMixin):
             idx = ace.jxs[5]
         else:
             raise ValueError(
-                "ACE photoatomic cross sections do not have " "data for MT={}.".format(
-                    mt
-                )
+                "ACE photoatomic cross sections do not have " f"data for MT={mt}."
             )
 
         # Store cross section

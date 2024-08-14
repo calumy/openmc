@@ -229,8 +229,8 @@ class CrossFilter:
         return str(other) == str(self)
 
     def __repr__(self):
-        filter_bins = "({} {} {})".format(
-            self.left_filter.bins, self.binary_op, self.right_filter.bins
+        filter_bins = (
+            f"({self.left_filter.bins} {self.binary_op} {self.right_filter.bins})"
         )
         parts = [
             "CrossFilter",

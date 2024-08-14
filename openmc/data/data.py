@@ -689,7 +689,7 @@ def atomic_mass(isotope):
     if not _ATOMIC_MASS:
         # Load data from AME2020 file
         mass_file = os.path.join(os.path.dirname(__file__), "mass_1.mas20.txt")
-        with open(mass_file, "r") as ame:
+        with open(mass_file) as ame:
             # Read lines in file starting at line 37
             for line in itertools.islice(ame, 36, None):
                 name = f"{line[20:22].strip()}{int(line[16:19])}"
@@ -1059,7 +1059,7 @@ def isotopes(element):
     # Get the nuclides present in nature
     result = []
     for kv in NATURAL_ABUNDANCE.items():
-        if re.match(r"{}\d+".format(element), kv[0]):
+        if re.match(rf"{element}\d+", kv[0]):
             result.append(kv)
 
     return result

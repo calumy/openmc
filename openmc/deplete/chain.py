@@ -146,7 +146,7 @@ def replace_missing(product, decay_data):
     # Find isotope with longest half-life
     half_life = 0.0
     for nuclide, data in decay_data.items():
-        m = re.match(r"{}(\d+)(?:_m\d+)?".format(symbol), nuclide)
+        m = re.match(rf"{symbol}(\d+)(?:_m\d+)?", nuclide)
         if m:
             # If we find a stable nuclide, stop search
             if data.nuclide["stable"]:
@@ -397,7 +397,7 @@ class Chain:
                     if mode.daughter in decay_data:
                         target = mode.daughter
                     else:
-                        print("missing {} {} {}".format(parent, type_, mode.daughter))
+                        print(f"missing {parent} {type_} {mode.daughter}")
                         target = replace_missing(mode.daughter, decay_data)
                     br = mode.branching_ratio.nominal_value
                     branch_ratios.append(br)
@@ -902,9 +902,9 @@ class Chain:
             ):
                 if strict:
                     msg = (
-                        "Sum of {} branching ratios for {} "
-                        "({:7.3f}) outside tolerance of 1 +/- "
-                        "{:5.3e}".format(reaction, parent, this_sum, tolerance)
+                        f"Sum of {reaction} branching ratios for {parent} "
+                        f"({this_sum:7.3f}) outside tolerance of 1 +/- "
+                        f"{tolerance:5.3e}"
                     )
                     raise ValueError(msg)
                 bad_sums[parent] = this_sum

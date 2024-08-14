@@ -198,9 +198,7 @@ class Mesh(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A mesh with ID={} has already " "been allocated.".format(
-                                uid
-                            )
+                            f"A mesh with ID={uid} has already " "been allocated."
                         )
 
                 # Set the mesh type -- note that mesh type attribute only

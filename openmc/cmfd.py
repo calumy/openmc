@@ -1011,7 +1011,7 @@ class CMFDRun:
                 elif openmc.settings.verbosity >= 5:
                     print(
                         "  CMFD data not written to statepoint file as it "
-                        "already exists in {}".format(filename),
+                        f"already exists in {filename}",
                         flush=True,
                     )
 
@@ -1806,11 +1806,11 @@ class CMFDRun:
         if self._power_monitor and openmc.lib.master():
             print(
                 "{:8s}{:20s}{:25s}{:s}{:s}".format(
-                    " {:d}:".format(iteration),
-                    "k-eff: {:0.8f}".format(k_n),
-                    "k-error:  {:.5e}".format(kerr),
-                    "src-error:  {:.5e}".format(serr),
-                    "  {:d}".format(innerits),
+                    f" {iteration:d}:",
+                    f"k-eff: {k_n:0.8f}",
+                    f"k-error:  {kerr:.5e}",
+                    f"src-error:  {serr:.5e}",
+                    f"  {innerits:d}",
                 ),
                 flush=True,
             )

@@ -234,9 +234,7 @@ class DecayMode(EqualityMixin):
         )
         if branching_ratio.nominal_value == 0.0:
             warn(
-                "Decay mode {} of parent {} has a zero branching ratio.".format(
-                    self.modes, self.parent
-                )
+                f"Decay mode {self.modes} of parent {self.parent} has a zero branching ratio."
             )
         cv.check_greater_than(
             "branching ratio uncertainty", branching_ratio.std_dev, 0.0, True

@@ -222,7 +222,7 @@ class MeshBase(IDManagerMixin, ABC):
 
         homogenized_materials = []
         for mat_volume_list in mat_volume_by_element:
-            material_ids, volumes = [list(x) for x in zip(*mat_volume_list)]
+            material_ids, volumes = (list(x) for x in zip(*mat_volume_list))
             total_volume = sum(volumes)
 
             # Check for void material and remove
@@ -340,7 +340,7 @@ class StructuredMesh(MeshBase):
 
             coords = (midpoints, grids[dims[1]], grids[dims[2]])
 
-            i_grid, j_grid, k_grid = [coords[dims.index(i)] for i in range(3)]
+            i_grid, j_grid, k_grid = (coords[dims.index(i)] for i in range(3))
 
             # re-use the generate vertices method to create the full mesh grid
             # transpose to get (i, j, k) ordering of the gridpoints
@@ -808,14 +808,14 @@ class RegularMesh(StructuredMesh):
         elif "upper_right" in group:
             mesh.upper_right = group["upper_right"][()]
         else:
-            raise IOError('Invalid mesh: must have one of "upper_right" or "width"')
+            raise OSError('Invalid mesh: must have one of "upper_right" or "width"')
 
         return mesh
 
     @classmethod
     def from_rect_lattice(
         cls,
-        lattice: "openmc.RectLattice",
+        lattice: openmc.RectLattice,
         division: int = 1,
         mesh_id: int | None = None,
         name: str = "",
@@ -855,7 +855,7 @@ class RegularMesh(StructuredMesh):
     @classmethod
     def from_domain(
         cls,
-        domain: "openmc.Cell" | "openmc.Region" | "openmc.Universe" | "openmc.Geometry",
+        domain: openmc.Cell | openmc.Region | openmc.Universe | openmc.Geometry,
         dimension: Sequence[int] = (10, 10, 10),
         mesh_id: int | None = None,
         name: str = "",
@@ -1580,7 +1580,7 @@ class CylindricalMesh(StructuredMesh):
     @classmethod
     def from_domain(
         cls,
-        domain: "openmc.Cell" | "openmc.Region" | "openmc.Universe" | "openmc.Geometry",
+        domain: openmc.Cell | openmc.Region | openmc.Universe | openmc.Geometry,
         dimension: Sequence[int] = (10, 10, 10),
         mesh_id: int | None = None,
         phi_grid_bounds: Sequence[float] = (0.0, 2 * pi),

@@ -124,8 +124,7 @@ class Material(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A material with ID={} has already "
-                            "been allocated.".format(uid)
+                            f"A material with ID={uid} has already " "been allocated."
                         )
 
                 index = c_int32()
