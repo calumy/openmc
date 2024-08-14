@@ -1,7 +1,6 @@
 from __future__ import annotations
 from collections.abc import Iterable
 from functools import lru_cache
-import os
 from pathlib import Path
 from numbers import Integral
 from tempfile import NamedTemporaryFile
@@ -14,7 +13,7 @@ import openmc
 import openmc._xml as xml
 from openmc.dummy_comm import DummyCommunicator
 from openmc.executor import _process_CLI_arguments
-from openmc.checkvalue import check_type, check_value, PathLike
+from openmc.checkvalue import check_type, check_value
 from openmc.exceptions import InvalidIDError
 from openmc.utility_funcs import change_directory
 

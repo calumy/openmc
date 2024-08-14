@@ -5,7 +5,6 @@ from numbers import Real
 from io import StringIO
 import itertools
 import os
-import re
 import tempfile
 from warnings import warn
 
