@@ -23,7 +23,7 @@ jobs:
           python-version: 3.12
 
       - name: Install linting dependencies
-        run: pip install -r pre-commit==3.8.0
+        run: pip install pre-commit==3.8.0
 
       - name: Run Pre-commit - manual
         env:
