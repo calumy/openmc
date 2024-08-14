@@ -649,9 +649,9 @@ class MDGXS(MGXS):
 
         # Build header for string with type and domain info
         string = "Multi-Delayed-Group XS\n"
-        string += "{0: <16}=\t{1}\n".format("\tReaction Type", self.mgxs_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain Type", self.domain_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain ID", self.domain.id)
+        string += "{: <16}=\t{}\n".format("\tReaction Type", self.mgxs_type)
+        string += "{: <16}=\t{}\n".format("\tDomain Type", self.domain_type)
+        string += "{: <16}=\t{}\n".format("\tDomain ID", self.domain.id)
 
         # Generate the header for an individual XS
         xs_header = f"\tCross Sections [{self.get_units(xs_type)}]:"
@@ -671,13 +671,13 @@ class MDGXS(MGXS):
         # Loop over all subdomains
         for subdomain in subdomains:
             if self.domain_type == "distribcell" or self.domain_type == "mesh":
-                string += "{0: <16}=\t{1}\n".format("\tSubdomain", subdomain)
+                string += "{: <16}=\t{}\n".format("\tSubdomain", subdomain)
 
             # Loop over all Nuclides
             for nuclide in nuclides:
                 # Build header for nuclide type
                 if nuclide != "sum":
-                    string += "{0: <16}=\t{1}\n".format("\tNuclide", nuclide)
+                    string += "{: <16}=\t{}\n".format("\tNuclide", nuclide)
 
                 # Add the cross section header
                 string += f"{xs_header: <16}\n"
@@ -2671,9 +2671,9 @@ class MatrixMDGXS(MDGXS):
 
         # Build header for string with type and domain info
         string = "Multi-Delayed-Group XS\n"
-        string += "{0: <16}=\t{1}\n".format("\tReaction Type", self.mgxs_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain Type", self.domain_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain ID", self.domain.id)
+        string += "{: <16}=\t{}\n".format("\tReaction Type", self.mgxs_type)
+        string += "{: <16}=\t{}\n".format("\tDomain Type", self.domain_type)
+        string += "{: <16}=\t{}\n".format("\tDomain ID", self.domain.id)
 
         # Generate the header for an individual XS
         xs_header = f"\tCross Sections [{self.get_units(xs_type)}]:"
@@ -2683,7 +2683,7 @@ class MatrixMDGXS(MDGXS):
             print(string)
             return
 
-        string += "{0: <16}\n".format("\tEnergy Groups:")
+        string += "{: <16}\n".format("\tEnergy Groups:")
         template = "{0: <12}Group {1} [{2: <10} - {3: <10}eV]\n"
 
         # Loop over energy groups ranges
@@ -2752,7 +2752,7 @@ class MatrixMDGXS(MDGXS):
                                             string += "\t" + template.format(
                                                 "", in_group, out_group
                                             )
-                                            string += "{0:.2e} +/- {1:.2e}%".format(
+                                            string += "{:.2e} +/- {:.2e}%".format(
                                                 average_xs[
                                                     pol,
                                                     azi,
@@ -2811,7 +2811,7 @@ class MatrixMDGXS(MDGXS):
                                         string += "\t" + template.format(
                                             "", in_group, out_group
                                         )
-                                        string += "{0:.2e} +/- {1:.2e}%".format(
+                                        string += "{:.2e} +/- {:.2e}%".format(
                                             average_xs[
                                                 pol, azi, in_group - 1, out_group - 1
                                             ],

@@ -297,7 +297,7 @@ def find_material(xyz):
     _dll.openmc_find_cell((c_double * 3)(*xyz), index, instance)
 
     mats = openmc.lib.Cell(index=index.value).fill
-    if isinstance(mats, (openmc.lib.Material, type(None))):
+    if isinstance(mats, openmc.lib.Material | type(None)):
         return mats
     else:
         return mats[instance.value]

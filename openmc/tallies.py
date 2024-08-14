@@ -1207,7 +1207,7 @@ class Tally(IDManagerMixin):
         """
 
         for score in scores:
-            if not isinstance(score, (str, openmc.CrossScore)):
+            if not isinstance(score, str | openmc.CrossScore):
                 msg = (
                     f'Unable to get score indices for score "{score}" in '
                     f'ID="{self.id}" since it is not a string or CrossScore '
@@ -1413,7 +1413,7 @@ class Tally(IDManagerMixin):
             column_name = "score"
 
             for score in self.scores:
-                if isinstance(score, (str, openmc.CrossScore)):
+                if isinstance(score, str | openmc.CrossScore):
                     scores.append(str(score))
                 elif isinstance(score, openmc.AggregateScore):
                     scores.append(score.name)
@@ -2101,13 +2101,13 @@ class Tally(IDManagerMixin):
             raise ValueError(msg)
 
         # Check that the scores are valid
-        if not isinstance(score1, (str, openmc.CrossScore)):
+        if not isinstance(score1, str | openmc.CrossScore):
             msg = (
                 f'Unable to swap score1 "{score1}" in Tally ID="{self.id}" since it is '
                 "not a string or CrossScore"
             )
             raise ValueError(msg)
-        elif not isinstance(score2, (str, openmc.CrossScore)):
+        elif not isinstance(score2, str | openmc.CrossScore):
             msg = (
                 f'Unable to swap score2 "{score2}" in Tally ID="{self.id}" since it is '
                 "not a string or CrossScore"

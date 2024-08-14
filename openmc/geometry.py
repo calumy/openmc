@@ -291,7 +291,7 @@ class Geometry:
         # TypeError: Subscripted generics cannot be used with class and instance checks
         check_type("materials", materials, (str, os.PathLike, openmc.Materials))
 
-        if isinstance(materials, (str, os.PathLike)):
+        if isinstance(materials, str | os.PathLike):
             materials = openmc.Materials.from_xml(materials)
 
         parser = ET.XMLParser(huge_tree=True)

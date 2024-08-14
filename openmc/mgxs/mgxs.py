@@ -1391,7 +1391,7 @@ class MGXS:
             # Sum across all applicable fine energy group filters
             for i, tally_filter in enumerate(tally.filters):
                 if not isinstance(
-                    tally_filter, (openmc.EnergyFilter, openmc.EnergyoutFilter)
+                    tally_filter, openmc.EnergyFilter | openmc.EnergyoutFilter
                 ):
                     continue
                 elif len(tally_filter.bins) != len(fine_edges) - 1:
@@ -1776,9 +1776,9 @@ class MGXS:
 
         # Build header for string with type and domain info
         string = "Multi-Group XS\n"
-        string += "{0: <16}=\t{1}\n".format("\tReaction Type", self.mgxs_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain Type", self.domain_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain ID", self.domain.id)
+        string += "{: <16}=\t{}\n".format("\tReaction Type", self.mgxs_type)
+        string += "{: <16}=\t{}\n".format("\tDomain Type", self.domain_type)
+        string += "{: <16}=\t{}\n".format("\tDomain ID", self.domain.id)
 
         # Generate the header for an individual XS
         xs_header = f"\tCross Sections [{self.get_units(xs_type)}]:"
@@ -1798,13 +1798,13 @@ class MGXS:
         # Loop over all subdomains
         for subdomain in subdomains:
             if self.domain_type == "distribcell" or self.domain_type == "mesh":
-                string += "{0: <16}=\t{1}\n".format("\tSubdomain", subdomain)
+                string += "{: <16}=\t{}\n".format("\tSubdomain", subdomain)
 
             # Loop over all Nuclides
             for nuclide in nuclides:
                 # Build header for nuclide type
                 if nuclide != "sum":
-                    string += "{0: <16}=\t{1}\n".format("\tNuclide", nuclide)
+                    string += "{: <16}=\t{}\n".format("\tNuclide", nuclide)
 
                 # Build header for cross section type
                 string += f"{xs_header: <16}\n"
@@ -2550,9 +2550,9 @@ class MatrixMGXS(MGXS):
 
         # Build header for string with type and domain info
         string = "Multi-Group XS\n"
-        string += "{0: <16}=\t{1}\n".format("\tReaction Type", self.mgxs_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain Type", self.domain_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain ID", self.domain.id)
+        string += "{: <16}=\t{}\n".format("\tReaction Type", self.mgxs_type)
+        string += "{: <16}=\t{}\n".format("\tDomain Type", self.domain_type)
+        string += "{: <16}=\t{}\n".format("\tDomain ID", self.domain.id)
 
         # Generate the header for an individual XS
         xs_header = f"\tCross Sections [{self.get_units(xs_type)}]:"
@@ -2562,7 +2562,7 @@ class MatrixMGXS(MGXS):
             print(string)
             return
 
-        string += "{0: <16}\n".format("\tEnergy Groups:")
+        string += "{: <16}\n".format("\tEnergy Groups:")
         template = "{0: <12}Group {1} [{2: <10} - {3: <10}eV]\n"
 
         # Loop over energy groups ranges
@@ -2580,13 +2580,13 @@ class MatrixMGXS(MGXS):
         # Loop over all subdomains
         for subdomain in subdomains:
             if self.domain_type == "distribcell" or self.domain_type == "mesh":
-                string += "{0: <16}=\t{1}\n".format("\tSubdomain", subdomain)
+                string += "{: <16}=\t{}\n".format("\tSubdomain", subdomain)
 
             # Loop over all Nuclides
             for nuclide in nuclides:
                 # Build header for nuclide type
                 if xs_type != "sum":
-                    string += "{0: <16}=\t{1}\n".format("\tNuclide", nuclide)
+                    string += "{: <16}=\t{}\n".format("\tNuclide", nuclide)
 
                 # Build header for cross section type
                 string += f"{xs_header: <16}\n"
@@ -2622,7 +2622,7 @@ class MatrixMGXS(MGXS):
                                     string += "\t" + template.format(
                                         "", in_group, out_group
                                     )
-                                    string += "{0:.2e} +/- {1:.2e}%".format(
+                                    string += "{:.2e} +/- {:.2e}%".format(
                                         average_xs[
                                             pol, azi, in_group - 1, out_group - 1
                                         ],
@@ -3106,7 +3106,7 @@ class DiffusionCoefficient(TransportXS):
         num_polar=1,
         num_azimuthal=1,
     ):
-        super(DiffusionCoefficient, self).__init__(
+        super().__init__(
             domain,
             domain_type,
             energy_groups,
@@ -3267,7 +3267,7 @@ class DiffusionCoefficient(TransportXS):
             # Sum across all applicable fine energy group filters
             for i, tally_filter in enumerate(tally.filters):
                 if not isinstance(
-                    tally_filter, (openmc.EnergyFilter, openmc.EnergyoutFilter)
+                    tally_filter, openmc.EnergyFilter | openmc.EnergyoutFilter
                 ):
                     continue
                 elif len(tally_filter.bins) != len(fine_edges) - 1:
@@ -5141,9 +5141,9 @@ class ScatterMatrixXS(MatrixMGXS):
 
         # Build header for string with type and domain info
         string = "Multi-Group XS\n"
-        string += "{0: <16}=\t{1}\n".format("\tReaction Type", rxn_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain Type", self.domain_type)
-        string += "{0: <16}=\t{1}\n".format("\tDomain ID", self.domain.id)
+        string += "{: <16}=\t{}\n".format("\tReaction Type", rxn_type)
+        string += "{: <16}=\t{}\n".format("\tDomain Type", self.domain_type)
+        string += "{: <16}=\t{}\n".format("\tDomain ID", self.domain.id)
 
         # Generate the header for an individual XS
         xs_header = f"\tCross Sections [{self.get_units(xs_type)}]:"
@@ -5153,7 +5153,7 @@ class ScatterMatrixXS(MatrixMGXS):
             print(string)
             return
 
-        string += "{0: <16}\n".format("\tEnergy Groups:")
+        string += "{: <16}\n".format("\tEnergy Groups:")
         template = "{0: <12}Group {1} [{2: <10} - {3: <10}eV]\n"
 
         # Loop over energy groups ranges
@@ -5171,13 +5171,13 @@ class ScatterMatrixXS(MatrixMGXS):
         # Loop over all subdomains
         for subdomain in subdomains:
             if self.domain_type == "distribcell" or self.domain_type == "mesh":
-                string += "{0: <16}=\t{1}\n".format("\tSubdomain", subdomain)
+                string += "{: <16}=\t{}\n".format("\tSubdomain", subdomain)
 
             # Loop over all Nuclides
             for nuclide in nuclides:
                 # Build header for nuclide type
                 if xs_type != "sum":
-                    string += "{0: <16}=\t{1}\n".format("\tNuclide", nuclide)
+                    string += "{: <16}=\t{}\n".format("\tNuclide", nuclide)
 
                 # Build header for cross section type
                 string += f"{xs_header: <16}\n"
@@ -5211,7 +5211,7 @@ class ScatterMatrixXS(MatrixMGXS):
                             if num_histogram_bins > 0:
                                 for i in range(num_histogram_bins):
                                     to_print += (
-                                        "\n{0: <16}Histogram Bin {1}:{2: <6}".format(
+                                        "\n{: <16}Histogram Bin {}:{: <6}".format(
                                             "", i + 1, ""
                                         )
                                     )
@@ -6390,9 +6390,7 @@ class MeshSurfaceMGXS(MGXS):
         by_nuclide=False,
         name="",
     ):
-        super(MeshSurfaceMGXS, self).__init__(
-            domain, domain_type, energy_groups, by_nuclide, name
-        )
+        super().__init__(domain, domain_type, energy_groups, by_nuclide, name)
         self._estimator = ["analog"]
         self._valid_estimators = ["analog"]
 
@@ -6822,7 +6820,5 @@ class Current(MeshSurfaceMGXS):
         by_nuclide=False,
         name="",
     ):
-        super(Current, self).__init__(
-            domain, domain_type, energy_groups, by_nuclide, name
-        )
+        super().__init__(domain, domain_type, energy_groups, by_nuclide, name)
         self._rxn_type = "current"

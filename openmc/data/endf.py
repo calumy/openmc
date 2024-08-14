@@ -486,7 +486,7 @@ class Evaluation:
     """
 
     def __init__(self, filename_or_obj):
-        if isinstance(filename_or_obj, (str, PurePath)):
+        if isinstance(filename_or_obj, str | PurePath):
             fh = open(str(filename_or_obj))
             need_to_close = True
         else:

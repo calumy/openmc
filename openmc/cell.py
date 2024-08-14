@@ -139,7 +139,7 @@ class Cell(IDManagerMixin):
         string += "{: <16}=\t{}\n".format("\tRegion", self.region)
         string += "{: <16}=\t{}\n".format("\tRotation", self.rotation)
         if self.fill_type == "material":
-            string += "\t{0: <15}=\t{1}\n".format("Temperature", self.temperature)
+            string += "\t{: <15}=\t{}\n".format("Temperature", self.temperature)
         string += "{: <16}=\t{}\n".format("\tTranslation", self.translation)
         string += "{: <16}=\t{}\n".format("\tVolume", self.volume)
 
@@ -170,7 +170,7 @@ class Cell(IDManagerMixin):
                         cv.check_type("cell.fill[i]", f, openmc.Material)
 
             elif not isinstance(
-                fill, (openmc.Material, openmc.Lattice, openmc.UniverseBase)
+                fill, openmc.Material | openmc.Lattice | openmc.UniverseBase
             ):
                 msg = (
                     f'Unable to set Cell ID="{self._id}" to use a '

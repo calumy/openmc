@@ -100,7 +100,7 @@ class BoundingBox:
         For another bounding box to be in the parent it must lie fully inside of it.
         """
         # test for a single point
-        if isinstance(other, (tuple, list, np.ndarray)):
+        if isinstance(other, tuple | list | np.ndarray):
             point = other
             check_length("Point", point, 3, 3)
             return all(point > self.lower_left) and all(point < self.upper_right)

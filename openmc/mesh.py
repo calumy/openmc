@@ -74,8 +74,8 @@ class MeshBase(IDManagerMixin, ABC):
 
     def __repr__(self):
         string = type(self).__name__ + "\n"
-        string += "{0: <16}{1}{2}\n".format("\tID", "=\t", self._id)
-        string += "{0: <16}{1}{2}\n".format("\tName", "=\t", self._name)
+        string += "{: <16}{}{}\n".format("\tID", "=\t", self._id)
+        string += "{: <16}{}{}\n".format("\tName", "=\t", self._name)
         return string
 
     def _volume_dim_check(self):
@@ -426,7 +426,7 @@ class StructuredMesh(MeshBase):
             self._check_vtk_datasets(datasets)
 
         # write linear elements using a structured grid
-        if not curvilinear or isinstance(self, (RegularMesh, RectilinearMesh)):
+        if not curvilinear or isinstance(self, RegularMesh | RectilinearMesh):
             vtk_grid = self._create_vtk_structured_grid()
             writer = vtk.vtkStructuredGridWriter()
         # write curvilinear elements using an unstructured grid
@@ -788,11 +788,11 @@ class RegularMesh(StructuredMesh):
 
     def __repr__(self):
         string = super().__repr__()
-        string += "{0: <16}{1}{2}\n".format("\tDimensions", "=\t", self.n_dimension)
-        string += "{0: <16}{1}{2}\n".format("\tVoxels", "=\t", self._dimension)
-        string += "{0: <16}{1}{2}\n".format("\tLower left", "=\t", self._lower_left)
-        string += "{0: <16}{1}{2}\n".format("\tUpper Right", "=\t", self.upper_right)
-        string += "{0: <16}{1}{2}\n".format("\tWidth", "=\t", self.width)
+        string += "{: <16}{}{}\n".format("\tDimensions", "=\t", self.n_dimension)
+        string += "{: <16}{}{}\n".format("\tVoxels", "=\t", self._dimension)
+        string += "{: <16}{}{}\n".format("\tLower left", "=\t", self._lower_left)
+        string += "{: <16}{}{}\n".format("\tUpper Right", "=\t", self.upper_right)
+        string += "{: <16}{}{}\n".format("\tWidth", "=\t", self.width)
         return string
 
     @classmethod

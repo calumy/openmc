@@ -90,7 +90,7 @@ class FilterMeta(ABCMeta):
             for func_name in namespace:
                 if func_name in Filter.__dict__:
                     # Inherit the docstring from Filter if not defined.
-                    if isinstance(namespace[func_name], (classmethod, staticmethod)):
+                    if isinstance(namespace[func_name], classmethod | staticmethod):
                         new_doc = namespace[func_name].__func__.__doc__
                         old_doc = Filter.__dict__[func_name].__func__.__doc__
                         if new_doc is None and old_doc is not None:

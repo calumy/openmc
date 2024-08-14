@@ -336,7 +336,7 @@ class Material(IDManagerMixin):
 
         # Get combined distribution, clip low-intensity values in discrete spectra
         combined = openmc.data.combine_distributions(dists, probs)
-        if isinstance(combined, (Discrete, Mixture)):
+        if isinstance(combined, Discrete | Mixture):
             combined.clip(clip_tolerance, inplace=True)
 
         return combined

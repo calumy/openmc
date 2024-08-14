@@ -130,7 +130,7 @@ class CorrelatedAngleEnergy(AngleEnergy):
             mu_tabular.append(
                 [
                     mu_ij
-                    if isinstance(mu_ij, (Tabular, Discrete))
+                    if isinstance(mu_ij, Tabular | Discrete)
                     else mu_ij.to_tabular()
                     for mu_ij in mu_i
                 ]

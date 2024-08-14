@@ -176,18 +176,16 @@ class Surface(IDManagerMixin, ABC):
 
     def __repr__(self):
         string = "Surface\n"
-        string += "{0: <20}{1}{2}\n".format("\tID", "=\t", self._id)
-        string += "{0: <20}{1}{2}\n".format("\tName", "=\t", self._name)
-        string += "{0: <20}{1}{2}\n".format("\tType", "=\t", self._type)
-        string += "{0: <20}{1}{2}\n".format("\tBoundary", "=\t", self._boundary_type)
+        string += "{: <20}{}{}\n".format("\tID", "=\t", self._id)
+        string += "{: <20}{}{}\n".format("\tName", "=\t", self._name)
+        string += "{: <20}{}{}\n".format("\tType", "=\t", self._type)
+        string += "{: <20}{}{}\n".format("\tBoundary", "=\t", self._boundary_type)
         if self._boundary_type in _ALBEDO_BOUNDARIES and not math.isclose(
             self._albedo, 1.0
         ):
-            string += "{0: <20}{1}{2}\n".format(
-                "\tBoundary Albedo", "=\t", self._albedo
-            )
+            string += "{: <20}{}{}\n".format("\tBoundary Albedo", "=\t", self._albedo)
 
-        coefficients = "{0: <20}".format("\tCoefficients") + "\n"
+        coefficients = "{: <20}".format("\tCoefficients") + "\n"
 
         for coeff in self._coefficients:
             coefficients += f"{coeff: <20}=\t{self._coefficients[coeff]}\n"
