@@ -107,8 +107,8 @@ class EnergyGroups:
 
         if self.group_edges is None:
             msg = (
-                'Unable to get energy group for energy "{0}" eV since '
-                "the group edges have not yet been set".format(energy)
+                f'Unable to get energy group for energy "{energy}" eV since '
+                "the group edges have not yet been set"
             )
             raise ValueError(msg)
 
@@ -138,8 +138,8 @@ class EnergyGroups:
 
         if self.group_edges is None:
             msg = (
-                'Unable to get energy group bounds for group "{0}" since '
-                "the group edges have not yet been set".format(group)
+                f'Unable to get energy group bounds for group "{group}" since '
+                "the group edges have not yet been set"
             )
             raise ValueError(msg)
 
@@ -174,8 +174,8 @@ class EnergyGroups:
 
         if self.group_edges is None:
             msg = (
-                'Unable to get energy group indices for groups "{0}" since '
-                "the group edges have not yet been set".format(groups)
+                f'Unable to get energy group indices for groups "{groups}" since '
+                "the group edges have not yet been set"
             )
             raise ValueError(msg)
 

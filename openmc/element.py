@@ -154,7 +154,7 @@ class Element(str):
             root = tree.getroot()
             for child in root.findall("library"):
                 nuclide = child.attrib["materials"]
-                if re.match(r"{}\d+".format(self), nuclide) and "_m" not in nuclide:
+                if re.match(rf"{self}\d+", nuclide) and "_m" not in nuclide:
                     library_nuclides.add(nuclide)
 
             # Get a set of the mutual and absent nuclides. Convert to lists
@@ -274,8 +274,8 @@ class Element(str):
             # Check if the target nuclide is present in the mixture
             if enrichment_target not in abundances:
                 msg = (
-                    "The target nuclide {} is not one of the naturally-occurring "
-                    "isotopes ({})".format(enrichment_target, list(abundances))
+                    f"The target nuclide {enrichment_target} is not one of the naturally-occurring "
+                    f"isotopes ({list(abundances)})"
                 )
                 raise ValueError(msg)
 

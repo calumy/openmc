@@ -491,7 +491,7 @@ def wwinp_to_wws(path: PathLike) -> list[WeightWindows]:
         header = wwinp.readline().split(None, 4)
         # read file type, time-dependence, number of
         # particles, mesh type and problem identifier
-        _if, iv, ni, nr = [int(x) for x in header[:4]]
+        _if, iv, ni, nr = (int(x) for x in header[:4])
 
         # header value checks
         if _if != 1:

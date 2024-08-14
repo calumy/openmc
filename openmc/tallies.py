@@ -1207,7 +1207,7 @@ class Tally(IDManagerMixin):
         """
 
         for score in scores:
-            if not isinstance(score, (str, openmc.CrossScore)):
+            if not isinstance(score, str | openmc.CrossScore):
                 msg = (
                     f'Unable to get score indices for score "{score}" in '
                     f'ID="{self.id}" since it is not a string or CrossScore '
@@ -1413,7 +1413,7 @@ class Tally(IDManagerMixin):
             column_name = "score"
 
             for score in self.scores:
-                if isinstance(score, (str, openmc.CrossScore)):
+                if isinstance(score, str | openmc.CrossScore):
                     scores.append(str(score))
                 elif isinstance(score, openmc.AggregateScore):
                     scores.append(score.name)
@@ -2095,22 +2095,22 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
         # Check that the scores are valid
-        if not isinstance(score1, (str, openmc.CrossScore)):
+        if not isinstance(score1, str | openmc.CrossScore):
             msg = (
-                'Unable to swap score1 "{}" in Tally ID="{}" since it is '
-                "not a string or CrossScore".format(score1, self.id)
+                f'Unable to swap score1 "{score1}" in Tally ID="{self.id}" since it is '
+                "not a string or CrossScore"
             )
             raise ValueError(msg)
-        elif not isinstance(score2, (str, openmc.CrossScore)):
+        elif not isinstance(score2, str | openmc.CrossScore):
             msg = (
-                'Unable to swap score2 "{}" in Tally ID="{}" since it is '
-                "not a string or CrossScore".format(score2, self.id)
+                f'Unable to swap score2 "{score2}" in Tally ID="{self.id}" since it is '
+                "not a string or CrossScore"
             )
             raise ValueError(msg)
 
@@ -2120,14 +2120,14 @@ class Tally(IDManagerMixin):
             raise ValueError(msg)
         elif score1 not in self.scores:
             msg = (
-                'Unable to swap score1 "{}" in Tally ID="{}" since it '
-                "does not contain such a score".format(score1, self.id)
+                f'Unable to swap score1 "{score1}" in Tally ID="{self.id}" since it '
+                "does not contain such a score"
             )
             raise ValueError(msg)
         elif score2 not in self.scores:
             msg = (
-                'Unable to swap score2 "{}" in Tally ID="{}" since it '
-                "does not contain such a score".format(score2, self.id)
+                f'Unable to swap score2 "{score2}" in Tally ID="{self.id}" since it '
+                "does not contain such a score"
             )
             raise ValueError(msg)
 
@@ -2189,8 +2189,8 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -2263,8 +2263,8 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -2336,8 +2336,8 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -2409,8 +2409,8 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -2485,8 +2485,8 @@ class Tally(IDManagerMixin):
         # Check that results have been read
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -2674,8 +2674,8 @@ class Tally(IDManagerMixin):
         # Ensure that the tally has data
         if not self.derived and self.sum is None:
             msg = (
-                'Unable to use tally arithmetic with Tally ID="{}" '
-                "since it does not contain any results.".format(self.id)
+                f'Unable to use tally arithmetic with Tally ID="{self.id}" '
+                "since it does not contain any results."
             )
             raise ValueError(msg)
 
@@ -3120,8 +3120,8 @@ class Tally(IDManagerMixin):
 
         if new_filter in self.filters:
             msg = (
-                'Unable to diagonalize Tally ID="{}" which already '
-                'contains a "{}" filter'.format(self.id, type(new_filter))
+                f'Unable to diagonalize Tally ID="{self.id}" which already '
+                f'contains a "{type(new_filter)}" filter'
             )
             raise ValueError(msg)
 

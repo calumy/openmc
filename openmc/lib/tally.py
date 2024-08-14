@@ -229,9 +229,7 @@ class Tally(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A tally with ID={} has already " "been allocated.".format(
-                                uid
-                            )
+                            f"A tally with ID={uid} has already " "been allocated."
                         )
 
                 index = c_int32()

@@ -124,8 +124,7 @@ class Material(_FortranObjectWithID):
                 else:
                     if uid in mapping:
                         raise AllocationError(
-                            "A material with ID={} has already "
-                            "been allocated.".format(uid)
+                            f"A material with ID={uid} has already " "been allocated."
                         )
 
                 index = c_int32()
@@ -138,7 +137,7 @@ class Material(_FortranObjectWithID):
             return None
 
         if index not in cls.__instances:
-            instance = super(Material, cls).__new__(cls)
+            instance = super().__new__(cls)
             instance._index = index
             if uid is not None:
                 instance.id = uid

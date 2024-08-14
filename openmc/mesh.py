@@ -74,8 +74,8 @@ class MeshBase(IDManagerMixin, ABC):
 
     def __repr__(self):
         string = type(self).__name__ + "\n"
-        string += "{0: <16}{1}{2}\n".format("\tID", "=\t", self._id)
-        string += "{0: <16}{1}{2}\n".format("\tName", "=\t", self._name)
+        string += "{: <16}{}{}\n".format("\tID", "=\t", self._id)
+        string += "{: <16}{}{}\n".format("\tName", "=\t", self._name)
         return string
 
     def _volume_dim_check(self):
@@ -222,7 +222,7 @@ class MeshBase(IDManagerMixin, ABC):
 
         homogenized_materials = []
         for mat_volume_list in mat_volume_by_element:
-            material_ids, volumes = [list(x) for x in zip(*mat_volume_list)]
+            material_ids, volumes = (list(x) for x in zip(*mat_volume_list))
             total_volume = sum(volumes)
 
             # Check for void material and remove
@@ -340,7 +340,7 @@ class StructuredMesh(MeshBase):
 
             coords = (midpoints, grids[dims[1]], grids[dims[2]])
 
-            i_grid, j_grid, k_grid = [coords[dims.index(i)] for i in range(3)]
+            i_grid, j_grid, k_grid = (coords[dims.index(i)] for i in range(3))
 
             # re-use the generate vertices method to create the full mesh grid
             # transpose to get (i, j, k) ordering of the gridpoints
@@ -426,7 +426,7 @@ class StructuredMesh(MeshBase):
             self._check_vtk_datasets(datasets)
 
         # write linear elements using a structured grid
-        if not curvilinear or isinstance(self, (RegularMesh, RectilinearMesh)):
+        if not curvilinear or isinstance(self, RegularMesh | RectilinearMesh):
             vtk_grid = self._create_vtk_structured_grid()
             writer = vtk.vtkStructuredGridWriter()
         # write curvilinear elements using an unstructured grid
@@ -788,11 +788,11 @@ class RegularMesh(StructuredMesh):
 
     def __repr__(self):
         string = super().__repr__()
-        string += "{0: <16}{1}{2}\n".format("\tDimensions", "=\t", self.n_dimension)
-        string += "{0: <16}{1}{2}\n".format("\tVoxels", "=\t", self._dimension)
-        string += "{0: <16}{1}{2}\n".format("\tLower left", "=\t", self._lower_left)
-        string += "{0: <16}{1}{2}\n".format("\tUpper Right", "=\t", self.upper_right)
-        string += "{0: <16}{1}{2}\n".format("\tWidth", "=\t", self.width)
+        string += "{: <16}{}{}\n".format("\tDimensions", "=\t", self.n_dimension)
+        string += "{: <16}{}{}\n".format("\tVoxels", "=\t", self._dimension)
+        string += "{: <16}{}{}\n".format("\tLower left", "=\t", self._lower_left)
+        string += "{: <16}{}{}\n".format("\tUpper Right", "=\t", self.upper_right)
+        string += "{: <16}{}{}\n".format("\tWidth", "=\t", self.width)
         return string
 
     @classmethod
@@ -808,14 +808,14 @@ class RegularMesh(StructuredMesh):
         elif "upper_right" in group:
             mesh.upper_right = group["upper_right"][()]
         else:
-            raise IOError('Invalid mesh: must have one of "upper_right" or "width"')
+            raise OSError('Invalid mesh: must have one of "upper_right" or "width"')
 
         return mesh
 
     @classmethod
     def from_rect_lattice(
         cls,
-        lattice: "openmc.RectLattice",
+        lattice: openmc.RectLattice,
         division: int = 1,
         mesh_id: int | None = None,
         name: str = "",
@@ -855,7 +855,7 @@ class RegularMesh(StructuredMesh):
     @classmethod
     def from_domain(
         cls,
-        domain: "openmc.Cell" | "openmc.Region" | "openmc.Universe" | "openmc.Geometry",
+        domain: openmc.Cell | openmc.Region | openmc.Universe | openmc.Geometry,
         dimension: Sequence[int] = (10, 10, 10),
         mesh_id: int | None = None,
         name: str = "",
@@ -1580,7 +1580,7 @@ class CylindricalMesh(StructuredMesh):
     @classmethod
     def from_domain(
         cls,
-        domain: "openmc.Cell" | "openmc.Region" | "openmc.Universe" | "openmc.Geometry",
+        domain: openmc.Cell | openmc.Region | openmc.Universe | openmc.Geometry,
         dimension: Sequence[int] = (10, 10, 10),
         mesh_id: int | None = None,
         phi_grid_bounds: Sequence[float] = (0.0, 2 * pi),

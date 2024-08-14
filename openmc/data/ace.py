@@ -105,7 +105,7 @@ def ascii_to_binary(ascii_file, binary_file):
     """
 
     # Read data from ASCII file
-    with open(str(ascii_file), "r") as ascii_file:
+    with open(str(ascii_file)) as ascii_file:
         lines = ascii_file.readlines()
 
     # Set default record length
@@ -130,9 +130,7 @@ def ascii_to_binary(ascii_file, binary_file):
             hd = lines[idx][35:45].encode()
             hk = lines[idx + 1][:70].encode()
             hm = lines[idx + 1][70:80].encode()
-            binary_file.write(
-                struct.pack(str("=10sdd10s70s10s"), hz, aw0, tz, hd, hk, hm)
-            )
+            binary_file.write(struct.pack("=10sdd10s70s10s", hz, aw0, tz, hd, hk, hm))
 
             # Read/write IZ/AW pairs
             data = " ".join(lines[idx + 2 : idx + 6]).split()
@@ -236,7 +234,7 @@ class Library(EqualityMixin):
 
             # No exception so proceed with ASCII - reopen in non-binary
             fh.close()
-            with open(filename, "r") as fh:
+            with open(filename) as fh:
                 self._read_ascii(fh, table_names, verbose)
         except UnicodeDecodeError:
             fh.close()
@@ -276,7 +274,7 @@ class Library(EqualityMixin):
             # Read name, atomic mass ratio, temperature, date, comment, and
             # material
             name, atomic_weight_ratio, temperature, date, comment, mat = struct.unpack(
-                str("=10sdd10s70s10s"), ace_file.read(116)
+                "=10sdd10s70s10s", ace_file.read(116)
             )
             name = name.decode().strip()
 
@@ -285,7 +283,7 @@ class Library(EqualityMixin):
             pairs = list(zip(data[::2], data[1::2]))
 
             # Read NXS
-            nxs = list(struct.unpack(str("=16i"), ace_file.read(64)))
+            nxs = list(struct.unpack("=16i", ace_file.read(64)))
 
             # Determine length of XSS and number of records
             length = nxs[0]
@@ -301,7 +299,7 @@ class Library(EqualityMixin):
                 print(f"Loading nuclide {name} at {kelvin} K")
 
             # Read JXS
-            jxs = list(struct.unpack(str("=32i"), ace_file.read(128)))
+            jxs = list(struct.unpack("=32i", ace_file.read(128)))
 
             # Read XSS
             ace_file.seek(start_position + recl_length)
@@ -527,7 +525,7 @@ def get_libraries_from_xsdir(path):
     xsdir = Path(path)
 
     # Find 'directory' section
-    with open(path, "r") as fh:
+    with open(path) as fh:
         lines = fh.readlines()
     for index, line in enumerate(lines):
         if line.strip().lower() == "directory":
@@ -572,7 +570,7 @@ def get_libraries_from_xsdata(path):
         List of paths to ACE libraries
     """
     xsdata = Path(path)
-    with open(xsdata, "r") as xsdata_file:
+    with open(xsdata) as xsdata_file:
         # As in get_libraries_from_xsdir, we use a dict for O(1) membership
         # check while retaining insertion order
         libraries = {}

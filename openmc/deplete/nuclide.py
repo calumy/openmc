@@ -278,10 +278,8 @@ class Nuclide:
                 )
                 if fpy_elem is None:
                     raise ValueError(
-                        "Fission product yields for {0} borrow from {1}, but {1} is"
-                        " not present in the chain file or has no yields.".format(
-                            nuc.name, parent
-                        )
+                        f"Fission product yields for {nuc.name} borrow from {parent}, but {parent} is"
+                        " not present in the chain file or has no yields."
                     )
                 nuc._fpy = parent
 
@@ -524,9 +522,7 @@ class FissionYieldDistribution(Mapping):
         return iter(self.energies)
 
     def __repr__(self):
-        return "<{} with {} products at {} energies>".format(
-            self.__class__.__name__, self.yield_matrix.shape[1], len(self.energies)
-        )
+        return f"<{self.__class__.__name__} with {self.yield_matrix.shape[1]} products at {len(self.energies)} energies>"
 
     @classmethod
     def from_xml_element(cls, element):

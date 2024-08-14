@@ -83,7 +83,7 @@ def _process_CLI_arguments(
         if event_based:
             args.append("-e")
 
-    if isinstance(restart_file, (str, os.PathLike)):
+    if isinstance(restart_file, str | os.PathLike):
         args += ["-r", str(restart_file)]
 
     if tracks:

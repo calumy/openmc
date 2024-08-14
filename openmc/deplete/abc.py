@@ -12,7 +12,8 @@ from inspect import signature
 from numbers import Real, Integral
 from pathlib import Path
 import time
-from typing import Optional, Union, Sequence
+from typing import Optional, Union
+from collections.abc import Sequence
 from warnings import warn
 
 import numpy as np
@@ -555,9 +556,9 @@ class Integrator(ABC):
         self,
         operator: TransportOperator,
         timesteps: Sequence[float],
-        power: Optional[Union[float, Sequence[float]]] = None,
-        power_density: Optional[Union[float, Sequence[float]]] = None,
-        source_rates: Optional[Sequence[float]] = None,
+        power: float | Sequence[float] | None = None,
+        power_density: float | Sequence[float] | None = None,
+        source_rates: Sequence[float] | None = None,
         timestep_units: str = "s",
         solver: str = "cram48",
     ):
@@ -566,11 +567,9 @@ class Integrator(ABC):
             res = operator.prev_res[-1]
             if res.data.shape[0] != self._num_stages:
                 raise ValueError(
-                    "{} incompatible with previous restart calculation. "
-                    "Previous scheme used {} intermediate solutions, while "
-                    "this uses {}".format(
-                        self.__class__.__name__, res.data.shape[0], self._num_stages
-                    )
+                    f"{self.__class__.__name__} incompatible with previous restart calculation. "
+                    f"Previous scheme used {res.data.shape[0]} intermediate solutions, while "
+                    f"this uses {self._num_stages}"
                 )
         self.operator = operator
         self.chain = operator.chain
@@ -592,9 +591,7 @@ class Integrator(ABC):
 
         if len(source_rates) != len(timesteps):
             raise ValueError(
-                "Number of time steps ({}) != number of powers ({})".format(
-                    len(timesteps), len(source_rates)
-                )
+                f"Number of time steps ({len(timesteps)}) != number of powers ({len(source_rates)})"
             )
 
         # Get list of times / units
@@ -679,9 +676,7 @@ class Integrator(ABC):
         # Inspect arguments
         if len(sig.parameters) != 3:
             raise ValueError(
-                "Function {} does not support three arguments: " "{!s}".format(
-                    func, sig
-                )
+                f"Function {func} does not support three arguments: " f"{sig!s}"
             )
 
         for ix, param in enumerate(sig.parameters.values()):
@@ -860,11 +855,11 @@ class Integrator(ABC):
 
     def add_transfer_rate(
         self,
-        material: Union[str, int, Material],
+        material: str | int | Material,
         components: Sequence[str],
         transfer_rate: float,
         transfer_rate_units: str = "1/s",
-        destination_material: Optional[Union[str, int, Material]] = None,
+        destination_material: str | int | Material | None = None,
     ):
         """Add transfer rates to depletable material.
 
@@ -988,9 +983,9 @@ class SIIntegrator(Integrator):
         self,
         operator: TransportOperator,
         timesteps: Sequence[float],
-        power: Optional[Union[float, Sequence[float]]] = None,
-        power_density: Optional[Union[float, Sequence[float]]] = None,
-        source_rates: Optional[Sequence[float]] = None,
+        power: float | Sequence[float] | None = None,
+        power_density: float | Sequence[float] | None = None,
+        source_rates: Sequence[float] | None = None,
         timestep_units: str = "s",
         n_steps: int = 10,
         solver: str = "cram48",

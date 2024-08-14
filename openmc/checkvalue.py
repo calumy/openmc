@@ -327,11 +327,11 @@ def check_filetype_version(obj, expected_type, expected_version):
 
         # Check filetype
         if this_filetype != expected_type:
-            raise IOError(f"{obj.filename} is not a {expected_type} file.")
+            raise OSError(f"{obj.filename} is not a {expected_type} file.")
 
         # Check version
         if this_version[0] != expected_version:
-            raise IOError(
+            raise OSError(
                 "{} file has a version of {} which is not "
                 "consistent with the version expected by OpenMC, {}".format(
                     this_filetype,
@@ -340,7 +340,7 @@ def check_filetype_version(obj, expected_type, expected_version):
                 )
             )
     except AttributeError:
-        raise IOError(
+        raise OSError(
             f"Could not read {obj.filename} file. This most likely "
             "means the file was produced by a different version of "
             "OpenMC than the one you are using."

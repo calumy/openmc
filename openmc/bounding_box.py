@@ -41,9 +41,7 @@ class BoundingBox:
         self._bounds = np.asarray([lower_left, upper_right], dtype=float)
 
     def __repr__(self) -> str:
-        return "BoundingBox(lower_left={}, upper_right={})".format(
-            tuple(self.lower_left), tuple(self.upper_right)
-        )
+        return f"BoundingBox(lower_left={tuple(self.lower_left)}, upper_right={tuple(self.upper_right)})"
 
     def __getitem__(self, key) -> np.ndarray:
         return self._bounds[key]
@@ -102,7 +100,7 @@ class BoundingBox:
         For another bounding box to be in the parent it must lie fully inside of it.
         """
         # test for a single point
-        if isinstance(other, (tuple, list, np.ndarray)):
+        if isinstance(other, tuple | list | np.ndarray):
             point = other
             check_length("Point", point, 3, 3)
             return all(point > self.lower_left) and all(point < self.upper_right)

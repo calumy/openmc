@@ -365,9 +365,7 @@ def _vectfit_xs(
                 raise RuntimeError("Complex poles are not conjugate!")
     if log:
         print(
-            "Found {} real poles and {} conjugate complex pairs.".format(
-                len(real_idx), len(conj_idx)
-            )
+            f"Found {len(real_idx)} real poles and {len(conj_idx)} conjugate complex pairs."
         )
     mp_poles = best_poles[real_idx + conj_idx]
     mp_residues = (
@@ -406,7 +404,7 @@ def _vectfit_xs(
             plt.title(f"MT {mt} vector fitted with {mp_poles.size} poles")
             fig.tight_layout()
             fig_file = os.path.join(
-                path_out, "{:.0f}-{:.0f}_MT{}.png".format(energy[0], energy[-1], mt)
+                path_out, f"{energy[0]:.0f}-{energy[-1]:.0f}_MT{mt}.png"
             )
             plt.savefig(fig_file)
             plt.close()
@@ -696,7 +694,7 @@ def _windowing(
         matrix = np.vstack([energy ** (0.5 * i - 1) for i in range(n_cf + 1)]).T
 
         # start from 0 poles, initialize pointers to the center nearest pole
-        center_pole_ind = np.argmin((np.fabs(poles.real - incenter)))
+        center_pole_ind = np.argmin(np.fabs(poles.real - incenter))
         lp = rp = center_pole_ind
         while True:
             if log >= DETAILED_LOGGING:
@@ -1020,16 +1018,14 @@ class WindowedMultipole(EqualityMixin):
                 major, minor = h5file.attrs["version"]
                 if major != WMP_VERSION_MAJOR:
                     raise DataError(
-                        "WMP data format uses version {}. {} whereas your "
+                        f"WMP data format uses version {major}. {minor} whereas your "
                         "installation of the OpenMC Python API expects version "
-                        "{}.x.".format(major, minor, WMP_VERSION_MAJOR)
+                        f"{WMP_VERSION_MAJOR}.x."
                     )
             else:
                 raise DataError(
                     "WMP data does not indicate a version. Your installation of "
-                    "the OpenMC Python API expects version {}.x data.".format(
-                        WMP_VERSION_MAJOR
-                    )
+                    f"the OpenMC Python API expects version {WMP_VERSION_MAJOR}.x data."
                 )
 
             group = list(h5file.values())[0]
@@ -1198,13 +1194,8 @@ class WindowedMultipole(EqualityMixin):
         # return the best wmp library
         if log:
             print(
-                "Final library: {} poles, {} windows, {:.2g} poles per window, "
-                "{} CF order".format(
-                    best_wmp.n_poles,
-                    best_wmp.n_windows,
-                    best_wmp.poles_per_window,
-                    best_wmp.fit_order,
-                )
+                f"Final library: {best_wmp.n_poles} poles, {best_wmp.n_windows} windows, {best_wmp.poles_per_window:.2g} poles per window, "
+                f"{best_wmp.fit_order} CF order"
             )
 
         return best_wmp

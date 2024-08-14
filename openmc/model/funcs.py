@@ -267,8 +267,8 @@ def pin(surfaces, items, subdivisions=None, divide_vols=True, **kwargs):
         if cur_rad <= prev_rad:
             raise ValueError(
                 "Surfaces do not appear to be increasing in radius. "
-                "Surface {} at index {} has radius {:7.3e} compared to "
-                "previous radius of {:7.5e}".format(surf.id, ix, cur_rad, prev_rad)
+                f"Surface {surf.id} at index {ix} has radius {cur_rad:7.3e} compared to "
+                f"previous radius of {prev_rad:7.5e}"
             )
         prev_rad = cur_rad
         centers.add(center_getter(surf))
@@ -276,7 +276,7 @@ def pin(surfaces, items, subdivisions=None, divide_vols=True, **kwargs):
     if len(centers) > 1:
         raise ValueError(
             "Surfaces do not appear to be concentric. The following "
-            "centers were found: {}".format(centers)
+            f"centers were found: {centers}"
         )
 
     if subdivisions is not None:

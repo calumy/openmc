@@ -495,7 +495,7 @@ class Settings:
             raise ValueError(msg)
 
         elif keff_trigger["type"] not in ["variance", "std_dev", "rel_err"]:
-            msg = "Unable to set a trigger on keff with " 'type "{0}"'.format(
+            msg = "Unable to set a trigger on keff with " 'type "{}"'.format(
                 keff_trigger["type"]
             )
             raise ValueError(msg)
@@ -508,7 +508,7 @@ class Settings:
             raise ValueError(msg)
 
         elif not isinstance(keff_trigger["threshold"], Real):
-            msg = "Unable to set a trigger on keff with " 'threshold "{0}"'.format(
+            msg = "Unable to set a trigger on keff with " 'threshold "{}"'.format(
                 keff_trigger["threshold"]
             )
             raise ValueError(msg)

@@ -285,18 +285,14 @@ class Library:
                 all_domains = domains
             else:
                 raise ValueError(
-                    "Unable to set domains with domain " 'type "{}"'.format(
-                        self.domain_type
-                    )
+                    "Unable to set domains with domain " f'type "{self.domain_type}"'
                 )
 
             # Check that each domain can be found in the geometry
             for domain in domains:
                 if domain not in all_domains:
                     raise ValueError(
-                        'Domain "{}" could not be found in the ' "geometry.".format(
-                            domain
-                        )
+                        f'Domain "{domain}" could not be found in the ' "geometry."
                     )
 
             self._domains = list(domains)
@@ -368,8 +364,8 @@ class Library:
             if correction == "P0" and self.legendre_order > 0:
                 msg = (
                     "The P0 correction will be ignored since the "
-                    "scattering order {} is greater than "
-                    "zero".format(self.legendre_order)
+                    f"scattering order {self.legendre_order} is greater than "
+                    "zero"
                 )
                 warn(msg)
         elif self.scatter_format == "histogram":
@@ -413,8 +409,8 @@ class Library:
             if self.correction == "P0" and legendre_order > 0:
                 msg = (
                     "The P0 correction will be ignored since the "
-                    "scattering order {} is greater than "
-                    "zero".format(legendre_order)
+                    f"scattering order {legendre_order} is greater than "
+                    "zero"
                 )
                 warn(msg, RuntimeWarning)
                 self.correction = None
@@ -710,8 +706,9 @@ class Library:
                 if domain_id == domain.id:
                     break
             else:
-                msg = 'Unable to find MGXS for "{0}" "{1}" in ' "library".format(
-                    self.domain_type, domain_id
+                msg = (
+                    f'Unable to find MGXS for "{self.domain_type}" "{domain_id}" in '
+                    "library"
                 )
                 raise ValueError(msg)
         else:

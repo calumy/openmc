@@ -358,7 +358,7 @@ class WeightWindows(_FortranObjectWithID):
             If the tally does not have a MeshFilter.
         """
         # do some checks on particle value
-        if not isinstance(particle, (ParticleType, str)):
+        if not isinstance(particle, ParticleType | str):
             raise ValueError(
                 f"Parameter 'particle' must be {ParticleType} or one of ('neutron', 'photon')."
             )

@@ -246,7 +246,7 @@ def _get_products(ev, mt):
                 # TODO: 'breakup' logic not implemented
 
                 if product_center_of_mass is False:
-                    raise IOError(
+                    raise OSError(
                         "Kalbach-Mann representation must be defined in the "
                         "'center-of-mass' system"
                     )
@@ -547,10 +547,8 @@ def _get_fission_products_endf(ev):
                     products.append(deepcopy(products[1]))
             elif nk != len(decay_constants):
                 raise ValueError(
-                    "Number of delayed neutron fission spectra ({}) does not "
-                    "match number of delayed neutron precursors ({}).".format(
-                        nk, len(decay_constants)
-                    )
+                    f"Number of delayed neutron fission spectra ({nk}) does not "
+                    f"match number of delayed neutron precursors ({len(decay_constants)})."
                 )
             for i in range(nk):
                 params, applicability = get_tab1_record(file_obj)
@@ -1059,9 +1057,9 @@ class Reaction(EqualityMixin):
                     # Make sure temperature has associated energy grid
                     if T not in energy:
                         raise ValueError(
-                            "Could not create reaction cross section for MT={} "
-                            "at T={} because no corresponding energy grid "
-                            "exists.".format(mt, T)
+                            f"Could not create reaction cross section for MT={mt} "
+                            f"at T={T} because no corresponding energy grid "
+                            "exists."
                         )
                     xs = Tgroup["xs"][()]
                     threshold_idx = Tgroup["xs"].attrs["threshold_idx"]
@@ -1122,8 +1120,8 @@ class Reaction(EqualityMixin):
             # Fix negatives -- known issue for Y89 in JEFF 3.2
             if np.any(xs < 0.0):
                 warn(
-                    "Negative cross sections found for MT={} in {}. Setting "
-                    "to zero.".format(rx.mt, ace.name)
+                    f"Negative cross sections found for MT={rx.mt} in {ace.name}. Setting "
+                    "to zero."
                 )
                 xs[xs < 0.0] = 0.0
 
@@ -1187,8 +1185,8 @@ class Reaction(EqualityMixin):
             # Fix negatives -- known issue for Ti46,49,50 in JEFF 3.2
             if np.any(elastic_xs < 0.0):
                 warn(
-                    "Negative elastic scattering cross section found for {}. "
-                    "Setting to zero.".format(ace.name)
+                    f"Negative elastic scattering cross section found for {ace.name}. "
+                    "Setting to zero."
                 )
                 elastic_xs[elastic_xs < 0.0] = 0.0
 

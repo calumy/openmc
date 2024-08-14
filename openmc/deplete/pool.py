@@ -87,8 +87,8 @@ def deplete(
         fission_yields = repeat(fission_yields[0])
     elif len(fission_yields) != len(n):
         raise ValueError(
-            "Number of material fission yield distributions {} is not "
-            "equal to the number of compositions {}".format(len(fission_yields), len(n))
+            f"Number of material fission yield distributions {len(fission_yields)} is not "
+            f"equal to the number of compositions {len(n)}"
         )
 
     if matrix_func is None:

@@ -136,15 +136,15 @@ def get_thermal_name(name):
                         break
 
             warn(
-                'Thermal scattering material "{}" is not recognized. '
-                "Assigning a name of {}.".format(name, match)
+                f'Thermal scattering material "{name}" is not recognized. '
+                f"Assigning a name of {match}."
             )
             return match
         else:
             # OK, we give up. Just use the ACE name.
             warn(
-                'Thermal scattering material "{0}" is not recognized. '
-                "Assigning a name of c_{0}.".format(name)
+                f'Thermal scattering material "{name}" is not recognized. '
+                f"Assigning a name of c_{name}."
             )
             return "c_" + name
 
@@ -560,17 +560,15 @@ class ThermalScattering(EqualityMixin):
             if "version" in h5file.attrs:
                 major, minor = h5file.attrs["version"]
                 if major != HDF5_VERSION_MAJOR:
-                    raise IOError(
-                        "HDF5 data format uses version {}.{} whereas your "
+                    raise OSError(
+                        f"HDF5 data format uses version {major}.{minor} whereas your "
                         "installation of the OpenMC Python API expects version "
-                        "{}.x.".format(major, minor, HDF5_VERSION_MAJOR)
+                        f"{HDF5_VERSION_MAJOR}.x."
                     )
             else:
-                raise IOError(
+                raise OSError(
                     "HDF5 data does not indicate a version. Your installation of "
-                    "the OpenMC Python API expects version {}.x data.".format(
-                        HDF5_VERSION_MAJOR
-                    )
+                    f"the OpenMC Python API expects version {HDF5_VERSION_MAJOR}.x data."
                 )
 
             group = list(h5file.values())[0]
@@ -889,7 +887,7 @@ class ThermalScattering(EqualityMixin):
                     # Replace ACE data with ENDF data
                     rx, rx_endf = data.elastic, data_endf.elastic
                     for t in temperatures:
-                        if isinstance(rx_endf.xs[t], (IncoherentElastic, Sum)):
+                        if isinstance(rx_endf.xs[t], IncoherentElastic | Sum):
                             rx.xs[t] = rx_endf.xs[t]
                             rx.distribution[t] = rx_endf.distribution[t]
 

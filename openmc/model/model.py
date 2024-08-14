@@ -1,6 +1,6 @@
 from __future__ import annotations
 from collections.abc import Iterable
-from functools import lru_cache
+from functools import lru_cache, cache
 from pathlib import Path
 from numbers import Integral
 from tempfile import NamedTemporaryFile
@@ -151,7 +151,7 @@ class Model:
             return False
 
     @property
-    @lru_cache(maxsize=None)
+    @cache
     def _materials_by_id(self) -> dict:
         """Dictionary mapping material ID --> material"""
         if self.materials:
@@ -161,14 +161,14 @@ class Model:
         return {mat.id: mat for mat in mats}
 
     @property
-    @lru_cache(maxsize=None)
+    @cache
     def _cells_by_id(self) -> dict:
         """Dictionary mapping cell ID --> cell"""
         cells = self.geometry.get_all_cells()
         return {cell.id: cell for cell in cells.values()}
 
     @property
-    @lru_cache(maxsize=None)
+    @cache
     def _cells_by_name(self) -> dict[int, openmc.Cell]:
         # Get the names maps, but since names are not unique, store a set for
         # each name key. In this way when the user requests a change by a name,
@@ -181,7 +181,7 @@ class Model:
         return result
 
     @property
-    @lru_cache(maxsize=None)
+    @cache
     def _materials_by_name(self) -> dict[int, openmc.Material]:
         if self.materials is None:
             mats = self.geometry.get_all_materials().values()

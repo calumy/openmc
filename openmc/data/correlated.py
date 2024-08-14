@@ -130,7 +130,7 @@ class CorrelatedAngleEnergy(AngleEnergy):
             mu_tabular.append(
                 [
                     mu_ij
-                    if isinstance(mu_ij, (Tabular, Discrete))
+                    if isinstance(mu_ij, Tabular | Discrete)
                     else mu_ij.to_tabular()
                     for mu_ij in mu_i
                 ]
@@ -172,7 +172,7 @@ class CorrelatedAngleEnergy(AngleEnergy):
                 else:
                     raise ValueError(
                         "Invalid univariate energy distribution as part of "
-                        "correlated angle-energy: {}".format(d)
+                        f"correlated angle-energy: {d}"
                     )
                 eout[0, offset_e : offset_e + n] = d.x
                 eout[1, offset_e : offset_e + n] = d.p

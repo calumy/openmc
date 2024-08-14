@@ -1318,9 +1318,9 @@ def pack_spheres(
 
     if not domain:
         raise ValueError(
-            "Could not map region {} to a container: supported "
+            f"Could not map region {region} to a container: supported "
             "container shapes are rectangular prism, cylinder, "
-            "sphere, and spherical shell.".format(region)
+            "sphere, and spherical shell."
         )
 
     # Determine the packing fraction/number of spheres
