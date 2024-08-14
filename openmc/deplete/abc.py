@@ -1046,7 +1046,7 @@ class SIIntegrator(Integrator):
                 else:
                     # Pull rates, k from previous iteration w/o
                     # re-running transport
-                    res = res_list[-1]  # defined in previous i iteration
+                    res = res_list[-1]  # defined in previous i iteration # noqa: F821
 
                 proc_time, n_list, res_list = self(n, res.rates, dt, p, i)
 

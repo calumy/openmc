@@ -6,7 +6,6 @@ from functools import wraps
 from math import pi, sqrt, atan2
 from numbers import Integral, Real
 from pathlib import Path
-import tempfile
 
 import h5py
 import lxml.etree as ET

@@ -28,7 +28,8 @@ from .abc import ReactionRateHelper, NormalizationHelper, FissionYieldHelper
 __all__ = (
     "DirectReactionRateHelper",
     "ChainFissionHelper",
-    "EnergyScoreHelper" "SourceRateHelper",
+    "EnergyScoreHelper",
+    "SourceRateHelper",
     "TalliedFissionYieldHelper",
     "ConstantFissionYieldHelper",
     "FissionYieldCutoffHelper",
