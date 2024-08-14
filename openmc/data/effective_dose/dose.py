@@ -3,17 +3,17 @@ from pathlib import Path
 import numpy as np
 
 _FILES = (
-    ('electron', 'electrons.txt'),
-    ('helium', 'helium_ions.txt'),
-    ('mu-', 'negative_muons.txt'),
-    ('pi-', 'negative_pions.txt'),
-    ('neutron', 'neutrons.txt'),
-    ('photon', 'photons.txt'),
-    ('photon kerma', 'photons_kerma.txt'),
-    ('mu+', 'positive_muons.txt'),
-    ('pi+', 'positive_pions.txt'),
-    ('positron', 'positrons.txt'),
-    ('proton', 'protons.txt')
+    ("electron", "electrons.txt"),
+    ("helium", "helium_ions.txt"),
+    ("mu-", "negative_muons.txt"),
+    ("pi-", "negative_pions.txt"),
+    ("neutron", "neutrons.txt"),
+    ("photon", "photons.txt"),
+    ("photon kerma", "photons_kerma.txt"),
+    ("mu+", "positive_muons.txt"),
+    ("pi+", "positive_pions.txt"),
+    ("positron", "positrons.txt"),
+    ("proton", "protons.txt"),
 )
 
 _DOSE_ICRP116 = {}
@@ -23,12 +23,12 @@ def _load_dose_icrp116():
     """Load effective dose tables from text files"""
     for particle, filename in _FILES:
         path = Path(__file__).parent / filename
-        data = np.loadtxt(path, skiprows=3, encoding='utf-8')
-        data[:, 0] *= 1e6   # Change energies to eV
+        data = np.loadtxt(path, skiprows=3, encoding="utf-8")
+        data[:, 0] *= 1e6  # Change energies to eV
         _DOSE_ICRP116[particle] = data
 
 
-def dose_coefficients(particle, geometry='AP'):
+def dose_coefficients(particle, geometry="AP"):
     """Return effective dose conversion coefficients from ICRP-116
 
     This function provides fluence (and air kerma) to effective dose conversion
@@ -63,10 +63,10 @@ def dose_coefficients(particle, geometry='AP'):
         raise ValueError(f"{particle} has no effective dose data")
 
     # Determine index for selected geometry
-    if particle in ('neutron', 'photon', 'proton', 'photon kerma'):
-        index = ('AP', 'PA', 'LLAT', 'RLAT', 'ROT', 'ISO').index(geometry)
+    if particle in ("neutron", "photon", "proton", "photon kerma"):
+        index = ("AP", "PA", "LLAT", "RLAT", "ROT", "ISO").index(geometry)
     else:
-        index = ('AP', 'PA', 'ISO').index(geometry)
+        index = ("AP", "PA", "ISO").index(geometry)
 
     # Pull out energy and dose from table
     energy = data[:, 0].copy()

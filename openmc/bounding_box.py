@@ -42,7 +42,8 @@ class BoundingBox:
 
     def __repr__(self) -> str:
         return "BoundingBox(lower_left={}, upper_right={})".format(
-            tuple(self.lower_left), tuple(self.upper_right))
+            tuple(self.lower_left), tuple(self.upper_right)
+        )
 
     def __getitem__(self, key) -> np.ndarray:
         return self._bounds[key]
@@ -123,7 +124,7 @@ class BoundingBox:
 
     @lower_left.setter
     def lower_left(self, llc):
-        check_length('lower_left', llc, 3, 3)
+        check_length("lower_left", llc, 3, 3)
         self[0] = llc
 
     @property
@@ -132,7 +133,7 @@ class BoundingBox:
 
     @upper_right.setter
     def upper_right(self, urc):
-        check_length('upper_right', urc, 3, 3)
+        check_length("upper_right", urc, 3, 3)
         self[1] = urc
 
     @property

@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 
 from .checkvalue import PathLike
 
+
 @contextmanager
 def change_directory(working_dir: PathLike | None = None, *, tmpdir: bool = False):
     """Context manager for executing in a provided working directory
@@ -24,7 +25,7 @@ def change_directory(working_dir: PathLike | None = None, *, tmpdir: bool = Fals
         tmp = TemporaryDirectory()
         working_dir = tmp.name
     elif working_dir is None:
-        raise ValueError('Must pass working_dir argument or specify tmpdir=True.')
+        raise ValueError("Must pass working_dir argument or specify tmpdir=True.")
 
     working_dir = Path(working_dir)
     working_dir.mkdir(parents=True, exist_ok=True)
