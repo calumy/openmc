@@ -23,6 +23,7 @@ env:
 jobs:
   main:
     runs-on: ubuntu-22.04
+    if: github.repository == 'openmc-dev/openmc'
     strategy:
       matrix:
         python-version: ["3.10"]

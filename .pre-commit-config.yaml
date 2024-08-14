@@ -1,0 +1,24 @@
+default_language_version:
+  python: python
+
+default_stages: [commit, manual]
+
+# Only test the openmc directory
+files: ^openmc/
+
+repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: no-commit-to-branch
+        args: ["--branch", develop]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+      - id: ruff-format

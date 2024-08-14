@@ -14,8 +14,8 @@ from .region import Region, Intersection, Union
 from .bounding_box import BoundingBox
 
 
-_BOUNDARY_TYPES = {'transmission', 'vacuum', 'reflective', 'periodic', 'white'}
-_ALBEDO_BOUNDARIES = {'reflective', 'periodic', 'white'}
+_BOUNDARY_TYPES = {"transmission", "vacuum", "reflective", "periodic", "white"}
+_ALBEDO_BOUNDARIES = {"reflective", "periodic", "white"}
 
 _WARNING_UPPER = """\
 "{}(...) accepts an argument named '{}', not '{}'. Future versions of OpenMC \
@@ -38,6 +38,7 @@ class SurfaceCoefficient:
         it is equivalent to (str).
 
     """
+
     def __init__(self, value):
         self.value = value
 
@@ -52,21 +53,21 @@ class SurfaceCoefficient:
 
     def __set__(self, instance, value):
         if isinstance(self.value, Real):
-            raise AttributeError('This coefficient is read-only')
-        check_type(f'{self.value} coefficient', value, Real)
+            raise AttributeError("This coefficient is read-only")
+        check_type(f"{self.value} coefficient", value, Real)
         instance._coefficients[self.value] = value
 
 
 def _future_kwargs_warning_helper(cls, *args, **kwargs):
     # Warn if Surface parameters are passed by position, not by keyword
-    argsdict = dict(zip(('boundary_type', 'name', 'surface_id'), args))
+    argsdict = dict(zip(("boundary_type", "name", "surface_id"), args))
     for k in argsdict:
         warn(_WARNING_KWARGS.format(cls.__name__, k), FutureWarning)
     kwargs.update(argsdict)
     return kwargs
 
 
-def get_rotation_matrix(rotation, order='xyz'):
+def get_rotation_matrix(rotation, order="xyz"):
     r"""Generate a 3x3 rotation matrix from input angles
 
     .. versionadded:: 0.12
@@ -89,17 +90,17 @@ def get_rotation_matrix(rotation, order='xyz'):
         intrinsic rotation using Tait-Bryan angles :math:`(\phi, \theta, \psi)`.
 
     """
-    check_type('surface rotation', rotation, Iterable, Real)
-    check_length('surface rotation', rotation, 3)
+    check_type("surface rotation", rotation, Iterable, Real)
+    check_length("surface rotation", rotation, 3)
 
-    phi, theta, psi = np.array(rotation)*(math.pi/180.)
+    phi, theta, psi = np.array(rotation) * (math.pi / 180.0)
     cx, sx = math.cos(phi), math.sin(phi)
     cy, sy = math.cos(theta), math.sin(theta)
     cz, sz = math.cos(psi), math.sin(psi)
     R = {
-        'x': np.array([[1., 0., 0.], [0., cx, -sx], [0., sx, cx]]),
-        'y': np.array([[cy, 0., sy], [0., 1., 0.], [-sy, 0., cy]]),
-        'z': np.array([[cz, -sz, 0.], [sz, cz, 0.], [0., 0., 1.]]),
+        "x": np.array([[1.0, 0.0, 0.0], [0.0, cx, -sx], [0.0, sx, cx]]),
+        "y": np.array([[cy, 0.0, sy], [0.0, 1.0, 0.0], [-sy, 0.0, cy]]),
+        "z": np.array([[cz, -sz, 0.0], [sz, cz, 0.0], [0.0, 0.0, 1.0]]),
     }
 
     R1, R2, R3 = (R[xi] for xi in order)
@@ -152,10 +153,11 @@ class Surface(IDManagerMixin, ABC):
 
     next_id = 1
     used_ids = set()
-    _atol = 1.e-12
+    _atol = 1.0e-12
 
-    def __init__(self, surface_id=None, boundary_type='transmission',
-                 albedo=1., name=''):
+    def __init__(
+        self, surface_id=None, boundary_type="transmission", albedo=1.0, name=""
+    ):
         self.id = surface_id
         self.name = name
         self.boundary_type = boundary_type
@@ -167,27 +169,28 @@ class Surface(IDManagerMixin, ABC):
         self._coefficients = {}
 
     def __neg__(self):
-        return Halfspace(self, '-')
+        return Halfspace(self, "-")
 
     def __pos__(self):
-        return Halfspace(self, '+')
+        return Halfspace(self, "+")
 
     def __repr__(self):
-        string = 'Surface\n'
-        string += '{0: <20}{1}{2}\n'.format('\tID', '=\t', self._id)
-        string += '{0: <20}{1}{2}\n'.format('\tName', '=\t', self._name)
-        string += '{0: <20}{1}{2}\n'.format('\tType', '=\t', self._type)
-        string += '{0: <20}{1}{2}\n'.format('\tBoundary', '=\t',
-                                            self._boundary_type)
-        if (self._boundary_type in _ALBEDO_BOUNDARIES and
-            not math.isclose(self._albedo, 1.0)):
-            string += '{0: <20}{1}{2}\n'.format('\tBoundary Albedo', '=\t',
-                                                self._albedo)
+        string = "Surface\n"
+        string += "{0: <20}{1}{2}\n".format("\tID", "=\t", self._id)
+        string += "{0: <20}{1}{2}\n".format("\tName", "=\t", self._name)
+        string += "{0: <20}{1}{2}\n".format("\tType", "=\t", self._type)
+        string += "{0: <20}{1}{2}\n".format("\tBoundary", "=\t", self._boundary_type)
+        if self._boundary_type in _ALBEDO_BOUNDARIES and not math.isclose(
+            self._albedo, 1.0
+        ):
+            string += "{0: <20}{1}{2}\n".format(
+                "\tBoundary Albedo", "=\t", self._albedo
+            )
 
-        coefficients = '{0: <20}'.format('\tCoefficients') + '\n'
+        coefficients = "{0: <20}".format("\tCoefficients") + "\n"
 
         for coeff in self._coefficients:
-            coefficients += f'{coeff: <20}=\t{self._coefficients[coeff]}\n'
+            coefficients += f"{coeff: <20}=\t{self._coefficients[coeff]}\n"
 
         string += coefficients
 
@@ -200,10 +203,10 @@ class Surface(IDManagerMixin, ABC):
     @name.setter
     def name(self, name):
         if name is not None:
-            check_type('surface name', name, str)
+            check_type("surface name", name, str)
             self._name = name
         else:
-            self._name = ''
+            self._name = ""
 
     @property
     def type(self):
@@ -215,8 +218,8 @@ class Surface(IDManagerMixin, ABC):
 
     @boundary_type.setter
     def boundary_type(self, boundary_type):
-        check_type('boundary type', boundary_type, str)
-        check_value('boundary type', boundary_type, _BOUNDARY_TYPES)
+        check_type("boundary type", boundary_type, str)
+        check_value("boundary type", boundary_type, _BOUNDARY_TYPES)
         self._boundary_type = boundary_type
 
     @property
@@ -225,8 +228,8 @@ class Surface(IDManagerMixin, ABC):
 
     @albedo.setter
     def albedo(self, albedo):
-        check_type('albedo', albedo, Real)
-        check_greater_than('albedo', albedo, 0.0)
+        check_type("albedo", albedo, Real)
+        check_greater_than("albedo", albedo, 0.0)
         self._albedo = float(albedo)
 
     @property
@@ -307,9 +310,9 @@ class Surface(IDManagerMixin, ABC):
         if coeffs is None:
             coeffs = self._get_base_coeffs()
         coeffs = np.asarray(coeffs)
-        nonzeros = ~np.isclose(coeffs, 0., rtol=0., atol=self._atol)
+        nonzeros = ~np.isclose(coeffs, 0.0, rtol=0.0, atol=self._atol)
         norm_factor = np.abs(coeffs[nonzeros][0])
-        return tuple([c/norm_factor for c in coeffs])
+        return tuple([c / norm_factor for c in coeffs])
 
     def is_equal(self, other):
         """Determine if this Surface is equivalent to another
@@ -324,7 +327,7 @@ class Surface(IDManagerMixin, ABC):
         coeffs1 = self.normalize(self._get_base_coeffs())
         coeffs2 = self.normalize(other._get_base_coeffs())
 
-        return np.allclose(coeffs1, coeffs2, rtol=0., atol=self._atol)
+        return np.allclose(coeffs1, coeffs2, rtol=0.0, atol=self._atol)
 
     @abstractmethod
     def _get_base_coeffs(self):
@@ -370,7 +373,7 @@ class Surface(IDManagerMixin, ABC):
         """
 
     @abstractmethod
-    def rotate(self, rotation, pivot=(0., 0., 0.), order='xyz', inplace=False):
+    def rotate(self, rotation, pivot=(0.0, 0.0, 0.0), order="xyz", inplace=False):
         r"""Rotate surface by angles provided or by applying matrix directly.
 
         .. versionadded:: 0.12
@@ -423,13 +426,21 @@ class Surface(IDManagerMixin, ABC):
             element.set("name", str(self._name))
 
         element.set("type", self._type)
-        if self.boundary_type != 'transmission':
+        if self.boundary_type != "transmission":
             element.set("boundary", self.boundary_type)
-            if (self.boundary_type in _ALBEDO_BOUNDARIES and
-                not math.isclose(self.albedo, 1.0)):
+            if self.boundary_type in _ALBEDO_BOUNDARIES and not math.isclose(
+                self.albedo, 1.0
+            ):
                 element.set("albedo", str(self.albedo))
-        element.set("coeffs", ' '.join([str(self._coefficients.setdefault(key, 0.0))
-                                        for key in self._coeff_keys]))
+        element.set(
+            "coeffs",
+            " ".join(
+                [
+                    str(self._coefficients.setdefault(key, 0.0))
+                    for key in self._coeff_keys
+                ]
+            ),
+        )
 
         return element
 
@@ -450,17 +461,17 @@ class Surface(IDManagerMixin, ABC):
         """
 
         # Determine appropriate class
-        surf_type = elem.get('type')
+        surf_type = elem.get("type")
         cls = _SURFACE_CLASSES[surf_type]
 
         # Determine ID, boundary type, boundary albedo, coefficients
         kwargs = {}
-        kwargs['surface_id'] = int(elem.get('id'))
-        kwargs['boundary_type'] = elem.get('boundary', 'transmission')
-        if kwargs['boundary_type'] in _ALBEDO_BOUNDARIES:
-            kwargs['albedo'] = float(elem.get('albedo', 1.0))
-        kwargs['name'] = elem.get('name')
-        coeffs = [float(x) for x in elem.get('coeffs').split()]
+        kwargs["surface_id"] = int(elem.get("id"))
+        kwargs["boundary_type"] = elem.get("boundary", "transmission")
+        if kwargs["boundary_type"] in _ALBEDO_BOUNDARIES:
+            kwargs["albedo"] = float(elem.get("albedo", 1.0))
+        kwargs["name"] = elem.get("name")
+        coeffs = [float(x) for x in elem.get("coeffs").split()]
         kwargs.update(dict(zip(cls._coeff_keys, coeffs)))
 
         return cls(**kwargs)
@@ -482,23 +493,27 @@ class Surface(IDManagerMixin, ABC):
         """
 
         # If this is a DAGMC surface, do nothing for now
-        geom_type = group.get('geom_type')
-        if geom_type and geom_type[()].decode() == 'dagmc':
+        geom_type = group.get("geom_type")
+        if geom_type and geom_type[()].decode() == "dagmc":
             return
 
-        surface_id = int(group.name.split('/')[-1].lstrip('surface '))
-        name = group['name'][()].decode() if 'name' in group else ''
+        surface_id = int(group.name.split("/")[-1].lstrip("surface "))
+        name = group["name"][()].decode() if "name" in group else ""
 
-        bc = group['boundary_type'][()].decode()
-        if 'albedo' in group:
-            bc_alb = float(group['albedo'][()].decode())
+        bc = group["boundary_type"][()].decode()
+        if "albedo" in group:
+            bc_alb = float(group["albedo"][()].decode())
         else:
             bc_alb = 1.0
-        coeffs = group['coefficients'][...]
-        kwargs = {'boundary_type': bc, 'albedo': bc_alb, 'name': name,
-                  'surface_id': surface_id}
+        coeffs = group["coefficients"][...]
+        kwargs = {
+            "boundary_type": bc,
+            "albedo": bc_alb,
+            "name": name,
+            "surface_id": surface_id,
+        }
 
-        surf_type = group['type'][()].decode()
+        surf_type = group["type"][()].decode()
         cls = _SURFACE_CLASSES[surf_type]
 
         return cls(*coeffs, **kwargs)
@@ -506,6 +521,7 @@ class Surface(IDManagerMixin, ABC):
 
 class PlaneMixin:
     """A Plane mixin class for all operations on order 1 surfaces"""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._periodic_surface = None
@@ -516,7 +532,7 @@ class PlaneMixin:
 
     @periodic_surface.setter
     def periodic_surface(self, periodic_surface):
-        check_type('periodic surface', periodic_surface, Plane)
+        check_type("periodic surface", periodic_surface, Plane)
         self._periodic_surface = periodic_surface
         periodic_surface._periodic_surface = self
 
@@ -525,7 +541,7 @@ class PlaneMixin:
 
     def _get_normal(self):
         a, b, c = self._get_base_coeffs()[:3]
-        return np.array((a, b, c)) / math.sqrt(a*a + b*b + c*c)
+        return np.array((a, b, c)) / math.sqrt(a * a + b * b + c * c)
 
     def bounding_box(self, side):
         """Determine an axis-aligned bounding box.
@@ -555,17 +571,21 @@ class PlaneMixin:
         ll = np.array([-np.inf, -np.inf, -np.inf])
         ur = np.array([np.inf, np.inf, np.inf])
         # If the plane is axis aligned, find the proper bounding box
-        if np.any(np.isclose(np.abs(nhat), 1., rtol=0., atol=self._atol)):
+        if np.any(np.isclose(np.abs(nhat), 1.0, rtol=0.0, atol=self._atol)):
             sign = nhat.sum()
             a, b, c, d = self._get_base_coeffs()
-            vals = [d/val if not np.isclose(val, 0., rtol=0., atol=self._atol)
-                    else np.nan for val in (a, b, c)]
-            if side == '-':
+            vals = [
+                d / val
+                if not np.isclose(val, 0.0, rtol=0.0, atol=self._atol)
+                else np.nan
+                for val in (a, b, c)
+            ]
+            if side == "-":
                 if sign > 0:
                     ur = np.array([v if not np.isnan(v) else np.inf for v in vals])
                 else:
                     ll = np.array([v if not np.isnan(v) else -np.inf for v in vals])
-            elif side == '+':
+            elif side == "+":
                 if sign > 0:
                     ll = np.array([v if not np.isnan(v) else -np.inf for v in vals])
                 else:
@@ -591,7 +611,7 @@ class PlaneMixin:
 
         x, y, z = point
         a, b, c, d = self._get_base_coeffs()
-        return a*x + b*y + c*z - d
+        return a * x + b * y + c * z - d
 
     def translate(self, vector, inplace=False):
         """Translate surface in given direction
@@ -610,7 +630,7 @@ class PlaneMixin:
             Translated surface
 
         """
-        if np.allclose(vector, 0., rtol=0., atol=self._atol):
+        if np.allclose(vector, 0.0, rtol=0.0, atol=self._atol):
             return self
 
         a, b, c, d = self._get_base_coeffs()
@@ -622,13 +642,13 @@ class PlaneMixin:
 
         return surf
 
-    def rotate(self, rotation, pivot=(0., 0., 0.), order='xyz', inplace=False):
+    def rotate(self, rotation, pivot=(0.0, 0.0, 0.0), order="xyz", inplace=False):
         pivot = np.asarray(pivot)
         rotation = np.asarray(rotation, dtype=float)
 
         # Allow rotation matrix to be passed in directly, otherwise build it
         if rotation.ndim == 2:
-            check_length('surface rotation', rotation.ravel(), 9)
+            check_length("surface rotation", rotation.ravel(), 9)
             Rmat = rotation
         else:
             Rmat = get_rotation_matrix(rotation, order=order)
@@ -640,11 +660,13 @@ class PlaneMixin:
         # Compute new rotated coefficients a, b, c
         a, b, c = Rmat @ [a, b, c]
 
-        kwargs = {'boundary_type': surf.boundary_type,
-                  'albedo': surf.albedo,
-                  'name': surf.name}
+        kwargs = {
+            "boundary_type": surf.boundary_type,
+            "albedo": surf.albedo,
+            "name": surf.name,
+        }
         if inplace:
-            kwargs['surface_id'] = surf.id
+            kwargs["surface_id"] = surf.id
 
         surf = Plane(a=a, b=b, c=c, d=d, **kwargs)
 
@@ -662,10 +684,9 @@ class PlaneMixin:
         element = super().to_xml_element()
 
         # Add periodic surface pair information
-        if self.boundary_type == 'periodic':
+        if self.boundary_type == "periodic":
             if self.periodic_surface is not None:
-                element.set("periodic_surface_id",
-                            str(self.periodic_surface.id))
+                element.set("periodic_surface_id", str(self.periodic_surface.id))
         return element
 
 
@@ -725,21 +746,20 @@ class Plane(PlaneMixin, Surface):
 
     """
 
-    _type = 'plane'
-    _coeff_keys = ('a', 'b', 'c', 'd')
+    _type = "plane"
+    _coeff_keys = ("a", "b", "c", "d")
 
-    def __init__(self, a=1., b=0., c=0., d=0., *args, **kwargs):
+    def __init__(self, a=1.0, b=0.0, c=0.0, d=0.0, *args, **kwargs):
         # *args should ultimately be limited to a, b, c, d as specified in
         # __init__, but to preserve the API it is allowed to accept Surface
         # parameters for now, but will raise warnings if this is done.
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         # Warn if capital letter arguments are passed
         capdict = {}
-        for k in 'ABCD':
+        for k in "ABCD":
             val = kwargs.pop(k, None)
             if val is not None:
-                warn(_WARNING_UPPER.format(type(self), k.lower(), k),
-                     FutureWarning)
+                warn(_WARNING_UPPER.format(type(self), k.lower(), k), FutureWarning)
                 capdict[k.lower()] = val
 
         super().__init__(**kwargs)
@@ -756,10 +776,10 @@ class Plane(PlaneMixin, Surface):
             return True
         return NotImplemented
 
-    a = SurfaceCoefficient('a')
-    b = SurfaceCoefficient('b')
-    c = SurfaceCoefficient('c')
-    d = SurfaceCoefficient('d')
+    a = SurfaceCoefficient("a")
+    b = SurfaceCoefficient("b")
+    c = SurfaceCoefficient("c")
+    d = SurfaceCoefficient("d")
 
     @classmethod
     def from_points(cls, p1, p2, p3, **kwargs):
@@ -793,7 +813,7 @@ class Plane(PlaneMixin, Surface):
         n = np.cross(p2 - p1, p3 - p1)
 
         # Check for points along a line
-        if np.allclose(n, 0.):
+        if np.allclose(n, 0.0):
             raise ValueError("All three points appear to lie along a line.")
 
         # The equation of the plane will by n·(<x,y,z> - p1) = 0. Determine
@@ -848,20 +868,20 @@ class XPlane(PlaneMixin, Surface):
 
     """
 
-    _type = 'x-plane'
-    _coeff_keys = ('x0',)
+    _type = "x-plane"
+    _coeff_keys = ("x0",)
 
-    def __init__(self, x0=0., *args, **kwargs):
+    def __init__(self, x0=0.0, *args, **kwargs):
         # work around for accepting Surface kwargs as positional parameters
         # until they are deprecated
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
         self.x0 = x0
 
-    x0 = SurfaceCoefficient('x0')
-    a = SurfaceCoefficient(1.)
-    b = SurfaceCoefficient(0.)
-    c = SurfaceCoefficient(0.)
+    x0 = SurfaceCoefficient("x0")
+    a = SurfaceCoefficient(1.0)
+    b = SurfaceCoefficient(0.0)
+    c = SurfaceCoefficient(0.0)
     d = x0
 
     def evaluate(self, point):
@@ -913,20 +933,20 @@ class YPlane(PlaneMixin, Surface):
 
     """
 
-    _type = 'y-plane'
-    _coeff_keys = ('y0',)
+    _type = "y-plane"
+    _coeff_keys = ("y0",)
 
-    def __init__(self, y0=0., *args, **kwargs):
+    def __init__(self, y0=0.0, *args, **kwargs):
         # work around for accepting Surface kwargs as positional parameters
         # until they are deprecated
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
         self.y0 = y0
 
-    y0 = SurfaceCoefficient('y0')
-    a = SurfaceCoefficient(0.)
-    b = SurfaceCoefficient(1.)
-    c = SurfaceCoefficient(0.)
+    y0 = SurfaceCoefficient("y0")
+    a = SurfaceCoefficient(0.0)
+    b = SurfaceCoefficient(1.0)
+    c = SurfaceCoefficient(0.0)
     d = y0
 
     def evaluate(self, point):
@@ -978,20 +998,20 @@ class ZPlane(PlaneMixin, Surface):
 
     """
 
-    _type = 'z-plane'
-    _coeff_keys = ('z0',)
+    _type = "z-plane"
+    _coeff_keys = ("z0",)
 
-    def __init__(self, z0=0., *args, **kwargs):
+    def __init__(self, z0=0.0, *args, **kwargs):
         # work around for accepting Surface kwargs as positional parameters
         # until they are deprecated
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
         self.z0 = z0
 
-    z0 = SurfaceCoefficient('z0')
-    a = SurfaceCoefficient(0.)
-    b = SurfaceCoefficient(0.)
-    c = SurfaceCoefficient(1.)
+    z0 = SurfaceCoefficient("z0")
+    a = SurfaceCoefficient(0.0)
+    b = SurfaceCoefficient(0.0)
+    c = SurfaceCoefficient(1.0)
     d = z0
 
     def evaluate(self, point):
@@ -1025,7 +1045,7 @@ class QuadricMixin:
         else:
             a, b, c, d, e, f, g, h, j, k = coeffs
 
-        A = np.array([[a, d/2, f/2], [d/2, b, e/2], [f/2, e/2, c]])
+        A = np.array([[a, d / 2, f / 2], [d / 2, b, e / 2], [f / 2, e / 2, c]])
         bvec = np.array([g, h, j])
 
         return A, bvec, k
@@ -1089,13 +1109,13 @@ class QuadricMixin:
 
         """
         vector = np.asarray(vector)
-        if np.allclose(vector, 0., rtol=0., atol=self._atol):
+        if np.allclose(vector, 0.0, rtol=0.0, atol=self._atol):
             return self
 
         surf = self if inplace else self.clone()
 
-        if hasattr(self, 'x0'):
-            for vi, xi in zip(vector, ('x0', 'y0', 'z0')):
+        if hasattr(self, "x0"):
+            for vi, xi in zip(vector, ("x0", "y0", "z0")):
                 val = getattr(surf, xi)
                 try:
                     setattr(surf, xi, val + vi)
@@ -1106,22 +1126,22 @@ class QuadricMixin:
         else:
             A, bvec, cnst = self.get_Abc()
 
-            g, h, j = bvec - 2*vector.T @ A
+            g, h, j = bvec - 2 * vector.T @ A
             k = cnst + vector.T @ A @ vector - bvec.T @ vector
 
-            for key, val in zip(('g', 'h', 'j', 'k'), (g, h, j, k)):
+            for key, val in zip(("g", "h", "j", "k"), (g, h, j, k)):
                 setattr(surf, key, val)
 
         return surf
 
-    def rotate(self, rotation, pivot=(0., 0., 0.), order='xyz', inplace=False):
+    def rotate(self, rotation, pivot=(0.0, 0.0, 0.0), order="xyz", inplace=False):
         # Get pivot and rotation matrix
         pivot = np.asarray(pivot)
         rotation = np.asarray(rotation, dtype=float)
 
         # Allow rotation matrix to be passed in directly, otherwise build it
         if rotation.ndim == 2:
-            check_length('surface rotation', rotation.ravel(), 9)
+            check_length("surface rotation", rotation.ravel(), 9)
             Rmat = rotation
         else:
             Rmat = get_rotation_matrix(rotation, order=order)
@@ -1135,27 +1155,30 @@ class QuadricMixin:
         else:
             base_cls = type(tsurf)._virtual_base
             # Copy necessary surface attributes to new kwargs dictionary
-            kwargs = {'boundary_type': tsurf.boundary_type,
-                      'albedo': tsurf.albedo, 'name': tsurf.name}
+            kwargs = {
+                "boundary_type": tsurf.boundary_type,
+                "albedo": tsurf.albedo,
+                "name": tsurf.name,
+            }
             if inplace:
-                kwargs['surface_id'] = tsurf.id
+                kwargs["surface_id"] = tsurf.id
             kwargs.update({k: getattr(tsurf, k) for k in base_cls._coeff_keys})
             # Create new instance of the virtual base class
             surf = base_cls(**kwargs)
 
         # Perform rotations on axis, origin, or quadric coefficients
-        if hasattr(surf, 'dx'):
-            for key, val in zip(('dx', 'dy', 'dz'), Rmat @ tsurf._axis):
+        if hasattr(surf, "dx"):
+            for key, val in zip(("dx", "dy", "dz"), Rmat @ tsurf._axis):
                 setattr(surf, key, val)
-        if hasattr(surf, 'x0'):
-            for key, val in zip(('x0', 'y0', 'z0'), Rmat @ tsurf._origin):
+        if hasattr(surf, "x0"):
+            for key, val in zip(("x0", "y0", "z0"), Rmat @ tsurf._origin):
                 setattr(surf, key, val)
         else:
             A, bvec, k = surf.get_Abc()
             Arot = Rmat @ A @ Rmat.T
 
             a, b, c = np.diagonal(Arot)
-            d, e, f = 2*Arot[0, 1], 2*Arot[1, 2], 2*Arot[0, 2]
+            d, e, f = 2 * Arot[0, 1], 2 * Arot[1, 2], 2 * Arot[0, 2]
             g, h, j = Rmat @ bvec
 
             for key, val in zip(surf._coeff_keys, (a, b, c, d, e, f, g, h, j, k)):
@@ -1235,11 +1258,13 @@ class Cylinder(QuadricMixin, Surface):
         Type of the surface
 
     """
-    _type = 'cylinder'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r', 'dx', 'dy', 'dz')
 
-    def __init__(self, x0=0., y0=0., z0=0., r=1., dx=0., dy=0., dz=1., *args,
-                 **kwargs):
+    _type = "cylinder"
+    _coeff_keys = ("x0", "y0", "z0", "r", "dx", "dy", "dz")
+
+    def __init__(
+        self, x0=0.0, y0=0.0, z0=0.0, r=1.0, dx=0.0, dy=0.0, dz=1.0, *args, **kwargs
+    ):
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
 
@@ -1252,23 +1277,27 @@ class Cylinder(QuadricMixin, Surface):
             return True
         return NotImplemented
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r = SurfaceCoefficient('r')
-    dx = SurfaceCoefficient('dx')
-    dy = SurfaceCoefficient('dy')
-    dz = SurfaceCoefficient('dz')
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r = SurfaceCoefficient("r")
+    dx = SurfaceCoefficient("dx")
+    dy = SurfaceCoefficient("dy")
+    dz = SurfaceCoefficient("dz")
 
     def bounding_box(self, side):
-        if side == '-':
+        if side == "-":
             r = self.r
-            ll = [xi - r if np.isclose(dxi, 0., rtol=0., atol=self._atol)
-                  else -np.inf for xi, dxi in zip(self._origin, self._axis)]
-            ur = [xi + r if np.isclose(dxi, 0., rtol=0., atol=self._atol)
-                  else np.inf for xi, dxi in zip(self._origin, self._axis)]
+            ll = [
+                xi - r if np.isclose(dxi, 0.0, rtol=0.0, atol=self._atol) else -np.inf
+                for xi, dxi in zip(self._origin, self._axis)
+            ]
+            ur = [
+                xi + r if np.isclose(dxi, 0.0, rtol=0.0, atol=self._atol) else np.inf
+                for xi, dxi in zip(self._origin, self._axis)
+            ]
             return BoundingBox(np.array(ll), np.array(ur))
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
     def _get_base_coeffs(self):
@@ -1281,30 +1310,30 @@ class Cylinder(QuadricMixin, Surface):
         dx = x2 - x1
         dy = y2 - y1
         dz = z2 - z1
-        cx = y1*z2 - y2*z1
-        cy = x2*z1 - x1*z2
-        cz = x1*y2 - x2*y1
+        cx = y1 * z2 - y2 * z1
+        cy = x2 * z1 - x1 * z2
+        cz = x1 * y2 - x2 * y1
 
         # Given p=(x,y,z), p1=(x1, y1, z1), p2=(x2, y2, z2), the equation
         # for the cylinder can be derived as
         # r = |(p - p1) ⨯ (p - p2)| / |p2 - p1|.
         # Expanding out all terms and grouping according to what Quadric
         # expects gives the following coefficients.
-        a = dy*dy + dz*dz
-        b = dx*dx + dz*dz
-        c = dx*dx + dy*dy
-        d = -2*dx*dy
-        e = -2*dy*dz
-        f = -2*dx*dz
-        g = 2*(cy*dz - cz*dy)
-        h = 2*(cz*dx - cx*dz)
-        j = 2*(cx*dy - cy*dx)
-        k = cx*cx + cy*cy + cz*cz - (dx*dx + dy*dy + dz*dz)*r*r
+        a = dy * dy + dz * dz
+        b = dx * dx + dz * dz
+        c = dx * dx + dy * dy
+        d = -2 * dx * dy
+        e = -2 * dy * dz
+        f = -2 * dx * dz
+        g = 2 * (cy * dz - cz * dy)
+        h = 2 * (cz * dx - cx * dz)
+        j = 2 * (cx * dy - cy * dx)
+        k = cx * cx + cy * cy + cz * cz - (dx * dx + dy * dy + dz * dz) * r * r
 
         return (a, b, c, d, e, f, g, h, j, k)
 
     @classmethod
-    def from_points(cls, p1, p2, r=1., **kwargs):
+    def from_points(cls, p1, p2, r=1.0, **kwargs):
         """Return a cylinder given points that define the axis and a radius.
 
         .. versionadded:: 0.12
@@ -1345,9 +1374,13 @@ class Cylinder(QuadricMixin, Surface):
         # This method overrides Surface.to_xml_element to generate a Quadric
         # since the C++ layer doesn't support Cylinders right now
         with catch_warnings():
-            simplefilter('ignore', IDWarning)
-            kwargs = {'boundary_type': self.boundary_type, 'albedo': self.albedo,
-                      'name': self.name, 'surface_id': self.id}
+            simplefilter("ignore", IDWarning)
+            kwargs = {
+                "boundary_type": self.boundary_type,
+                "albedo": self.albedo,
+                "name": self.name,
+                "surface_id": self.id,
+            }
             quad_rep = Quadric(*self._get_base_coeffs(), **kwargs)
         return quad_rep.to_xml_element()
 
@@ -1403,14 +1436,13 @@ class XCylinder(QuadricMixin, Surface):
 
     """
 
-    _type = 'x-cylinder'
-    _coeff_keys = ('y0', 'z0', 'r')
+    _type = "x-cylinder"
+    _coeff_keys = ("y0", "z0", "r")
 
-    def __init__(self, y0=0., z0=0., r=1., *args, **kwargs):
-        R = kwargs.pop('R', None)
+    def __init__(self, y0=0.0, z0=0.0, r=1.0, *args, **kwargs):
+        R = kwargs.pop("R", None)
         if R is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r', 'R'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r", "R"), FutureWarning)
             r = R
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1418,36 +1450,36 @@ class XCylinder(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (y0, z0, r)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient(0.)
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r = SurfaceCoefficient('r')
-    dx = SurfaceCoefficient(1.)
-    dy = SurfaceCoefficient(0.)
-    dz = SurfaceCoefficient(0.)
+    x0 = SurfaceCoefficient(0.0)
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r = SurfaceCoefficient("r")
+    dx = SurfaceCoefficient(1.0)
+    dy = SurfaceCoefficient(0.0)
+    dz = SurfaceCoefficient(0.0)
 
     def _get_base_coeffs(self):
         y0, z0, r = self.y0, self.z0, self.r
 
-        a = d = e = f = g = 0.
-        b = c = 1.
-        h, j, k = -2*y0, -2*z0, y0*y0 + z0*z0 - r*r
+        a = d = e = f = g = 0.0
+        b = c = 1.0
+        h, j, k = -2 * y0, -2 * z0, y0 * y0 + z0 * z0 - r * r
 
         return (a, b, c, d, e, f, g, h, j, k)
 
     def bounding_box(self, side):
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([-np.inf, self.y0 - self.r, self.z0 - self.r]),
-                np.array([np.inf, self.y0 + self.r, self.z0 + self.r])
+                np.array([np.inf, self.y0 + self.r, self.z0 + self.r]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
     def evaluate(self, point):
         y = point[1] - self.y0
         z = point[2] - self.z0
-        return y*y + z*z - self.r**2
+        return y * y + z * z - self.r**2
 
 
 class YCylinder(QuadricMixin, Surface):
@@ -1501,14 +1533,13 @@ class YCylinder(QuadricMixin, Surface):
 
     """
 
-    _type = 'y-cylinder'
-    _coeff_keys = ('x0', 'z0', 'r')
+    _type = "y-cylinder"
+    _coeff_keys = ("x0", "z0", "r")
 
-    def __init__(self, x0=0., z0=0., r=1., *args, **kwargs):
-        R = kwargs.pop('R', None)
+    def __init__(self, x0=0.0, z0=0.0, r=1.0, *args, **kwargs):
+        R = kwargs.pop("R", None)
         if R is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r', 'R'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r", "R"), FutureWarning)
             r = R
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1516,36 +1547,36 @@ class YCylinder(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, z0, r)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient(0.)
-    z0 = SurfaceCoefficient('z0')
-    r = SurfaceCoefficient('r')
-    dx = SurfaceCoefficient(0.)
-    dy = SurfaceCoefficient(1.)
-    dz = SurfaceCoefficient(0.)
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient(0.0)
+    z0 = SurfaceCoefficient("z0")
+    r = SurfaceCoefficient("r")
+    dx = SurfaceCoefficient(0.0)
+    dy = SurfaceCoefficient(1.0)
+    dz = SurfaceCoefficient(0.0)
 
     def _get_base_coeffs(self):
         x0, z0, r = self.x0, self.z0, self.r
 
-        b = d = e = f = h = 0.
-        a = c = 1.
-        g, j, k = -2*x0, -2*z0, x0*x0 + z0*z0 - r*r
+        b = d = e = f = h = 0.0
+        a = c = 1.0
+        g, j, k = -2 * x0, -2 * z0, x0 * x0 + z0 * z0 - r * r
 
         return (a, b, c, d, e, f, g, h, j, k)
 
     def bounding_box(self, side):
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([self.x0 - self.r, -np.inf, self.z0 - self.r]),
-                np.array([self.x0 + self.r, np.inf, self.z0 + self.r])
+                np.array([self.x0 + self.r, np.inf, self.z0 + self.r]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
     def evaluate(self, point):
         x = point[0] - self.x0
         z = point[2] - self.z0
-        return x*x + z*z - self.r**2
+        return x * x + z * z - self.r**2
 
 
 class ZCylinder(QuadricMixin, Surface):
@@ -1599,14 +1630,13 @@ class ZCylinder(QuadricMixin, Surface):
 
     """
 
-    _type = 'z-cylinder'
-    _coeff_keys = ('x0', 'y0', 'r')
+    _type = "z-cylinder"
+    _coeff_keys = ("x0", "y0", "r")
 
-    def __init__(self, x0=0., y0=0., r=1., *args, **kwargs):
-        R = kwargs.pop('R', None)
+    def __init__(self, x0=0.0, y0=0.0, r=1.0, *args, **kwargs):
+        R = kwargs.pop("R", None)
         if R is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r', 'R'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r", "R"), FutureWarning)
             r = R
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1614,36 +1644,36 @@ class ZCylinder(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, y0, r)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient(0.)
-    r = SurfaceCoefficient('r')
-    dx = SurfaceCoefficient(0.)
-    dy = SurfaceCoefficient(0.)
-    dz = SurfaceCoefficient(1.)
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient(0.0)
+    r = SurfaceCoefficient("r")
+    dx = SurfaceCoefficient(0.0)
+    dy = SurfaceCoefficient(0.0)
+    dz = SurfaceCoefficient(1.0)
 
     def _get_base_coeffs(self):
         x0, y0, r = self.x0, self.y0, self.r
 
-        c = d = e = f = j = 0.
-        a = b = 1.
-        g, h, k = -2*x0, -2*y0, x0*x0 + y0*y0 - r*r
+        c = d = e = f = j = 0.0
+        a = b = 1.0
+        g, h, k = -2 * x0, -2 * y0, x0 * x0 + y0 * y0 - r * r
 
         return (a, b, c, d, e, f, g, h, j, k)
 
     def bounding_box(self, side):
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([self.x0 - self.r, self.y0 - self.r, -np.inf]),
-                np.array([self.x0 + self.r, self.y0 + self.r, np.inf])
+                np.array([self.x0 + self.r, self.y0 + self.r, np.inf]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
     def evaluate(self, point):
         x = point[0] - self.x0
         y = point[1] - self.y0
-        return x*x + y*y - self.r**2
+        return x * x + y * y - self.r**2
 
 
 class Sphere(QuadricMixin, Surface):
@@ -1699,14 +1729,13 @@ class Sphere(QuadricMixin, Surface):
 
     """
 
-    _type = 'sphere'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r')
+    _type = "sphere"
+    _coeff_keys = ("x0", "y0", "z0", "r")
 
-    def __init__(self, x0=0., y0=0., z0=0., r=1., *args, **kwargs):
-        R = kwargs.pop('R', None)
+    def __init__(self, x0=0.0, y0=0.0, z0=0.0, r=1.0, *args, **kwargs):
+        R = kwargs.pop("R", None)
         if R is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r', 'R'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r", "R"), FutureWarning)
             r = R
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1714,34 +1743,34 @@ class Sphere(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, y0, z0, r)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r = SurfaceCoefficient('r')
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r = SurfaceCoefficient("r")
 
     def _get_base_coeffs(self):
         x0, y0, z0, r = self.x0, self.y0, self.z0, self.r
-        a = b = c = 1.
-        d = e = f = 0.
-        g, h, j = -2*x0, -2*y0, -2*z0
-        k = x0*x0 + y0*y0 + z0*z0 - r*r
+        a = b = c = 1.0
+        d = e = f = 0.0
+        g, h, j = -2 * x0, -2 * y0, -2 * z0
+        k = x0 * x0 + y0 * y0 + z0 * z0 - r * r
 
         return (a, b, c, d, e, f, g, h, j, k)
 
     def bounding_box(self, side):
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([self.x0 - self.r, self.y0 - self.r, self.z0 - self.r]),
-                np.array([self.x0 + self.r, self.y0 + self.r, self.z0 + self.r])
+                np.array([self.x0 + self.r, self.y0 + self.r, self.z0 + self.r]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
     def evaluate(self, point):
         x = point[0] - self.x0
         y = point[1] - self.y0
         z = point[2] - self.z0
-        return x*x + y*y + z*z - self.r**2
+        return x * x + y * y + z * z - self.r**2
 
 
 class Cone(QuadricMixin, Surface):
@@ -1762,7 +1791,7 @@ class Cone(QuadricMixin, Surface):
         z-coordinate of the apex in [cm]. Defaults to 0.
     r2 : float, optional
         Parameter related to the aperture [:math:`\\rm cm^2`].
-        It can be interpreted as the increase in the radius squared per cm along 
+        It can be interpreted as the increase in the radius squared per cm along
         the cone's axis of revolution.
     dx : float, optional
         x-component of the vector representing the axis of the cone.
@@ -1820,15 +1849,15 @@ class Cone(QuadricMixin, Surface):
 
     """
 
-    _type = 'cone'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r2', 'dx', 'dy', 'dz')
+    _type = "cone"
+    _coeff_keys = ("x0", "y0", "z0", "r2", "dx", "dy", "dz")
 
-    def __init__(self, x0=0., y0=0., z0=0., r2=1., dx=0., dy=0., dz=1., *args,
-                 **kwargs):
-        R2 = kwargs.pop('R2', None)
+    def __init__(
+        self, x0=0.0, y0=0.0, z0=0.0, r2=1.0, dx=0.0, dy=0.0, dz=1.0, *args, **kwargs
+    ):
+        R2 = kwargs.pop("R2", None)
         if R2 is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r2', 'R2'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r2", "R2"), FutureWarning)
             r2 = R2
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1842,13 +1871,13 @@ class Cone(QuadricMixin, Surface):
             return True
         return NotImplemented
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r2 = SurfaceCoefficient('r2')
-    dx = SurfaceCoefficient('dx')
-    dy = SurfaceCoefficient('dy')
-    dz = SurfaceCoefficient('dz')
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r2 = SurfaceCoefficient("r2")
+    dx = SurfaceCoefficient("dx")
+    dy = SurfaceCoefficient("dy")
+    dz = SurfaceCoefficient("dz")
 
     def _get_base_coeffs(self):
         # The equation for a general cone with vertex at point p = (x0, y0, z0)
@@ -1867,17 +1896,21 @@ class Cone(QuadricMixin, Surface):
         dx, dy, dz = self._axis
         cos2 = 1 / (1 + self.r2)
 
-        a = cos2 - dx*dx
-        b = cos2 - dy*dy
-        c = cos2 - dz*dz
-        d = -2*dx*dy
-        e = -2*dy*dz
-        f = -2*dx*dz
-        g = 2*(dx*(dy*y0 + dz*z0) - a*x0)
-        h = 2*(dy*(dx*x0 + dz*z0) - b*y0)
-        j = 2*(dz*(dx*x0 + dy*y0) - c*z0)
-        k = a*x0*x0 + b*y0*y0 + c*z0*z0 - 2*(dx*dy*x0*y0 + dy*dz*y0*z0 +
-                                             dx*dz*x0*z0)
+        a = cos2 - dx * dx
+        b = cos2 - dy * dy
+        c = cos2 - dz * dz
+        d = -2 * dx * dy
+        e = -2 * dy * dz
+        f = -2 * dx * dz
+        g = 2 * (dx * (dy * y0 + dz * z0) - a * x0)
+        h = 2 * (dy * (dx * x0 + dz * z0) - b * y0)
+        j = 2 * (dz * (dx * x0 + dy * y0) - c * z0)
+        k = (
+            a * x0 * x0
+            + b * y0 * y0
+            + c * z0 * z0
+            - 2 * (dx * dy * x0 * y0 + dy * dz * y0 * z0 + dx * dz * x0 * z0)
+        )
 
         return (a, b, c, d, e, f, g, h, j, k)
 
@@ -1893,11 +1926,13 @@ class Cone(QuadricMixin, Surface):
         # This method overrides Surface.to_xml_element to generate a Quadric
         # since the C++ layer doesn't support Cones right now
         with catch_warnings():
-            simplefilter('ignore', IDWarning)
-            kwargs = {'boundary_type': self.boundary_type,
-                      'albedo': self.albedo,
-                      'name': self.name,
-                      'surface_id': self.id}
+            simplefilter("ignore", IDWarning)
+            kwargs = {
+                "boundary_type": self.boundary_type,
+                "albedo": self.albedo,
+                "name": self.name,
+                "surface_id": self.id,
+            }
             quad_rep = Quadric(*self._get_base_coeffs(), **kwargs)
         return quad_rep.to_xml_element()
 
@@ -1920,7 +1955,7 @@ class XCone(QuadricMixin, Surface):
         z-coordinate of the apex in [cm]. Defaults to 0.
     r2 : float, optional
         Parameter related to the aperture [:math:`\\rm cm^2`].
-        It can be interpreted as the increase in the radius squared per cm along 
+        It can be interpreted as the increase in the radius squared per cm along
         the cone's axis of revolution.
     boundary_type : {'transmission, 'vacuum', 'reflective', 'white'}, optional
         Boundary condition that defines the behavior for particles hitting the
@@ -1962,14 +1997,13 @@ class XCone(QuadricMixin, Surface):
 
     """
 
-    _type = 'x-cone'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r2')
+    _type = "x-cone"
+    _coeff_keys = ("x0", "y0", "z0", "r2")
 
-    def __init__(self, x0=0., y0=0., z0=0., r2=1., *args, **kwargs):
-        R2 = kwargs.pop('R2', None)
+    def __init__(self, x0=0.0, y0=0.0, z0=0.0, r2=1.0, *args, **kwargs):
+        R2 = kwargs.pop("R2", None)
         if R2 is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r2', 'R2'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r2", "R2"), FutureWarning)
             r2 = R2
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -1977,22 +2011,22 @@ class XCone(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, y0, z0, r2)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r2 = SurfaceCoefficient('r2')
-    dx = SurfaceCoefficient(1.)
-    dy = SurfaceCoefficient(0.)
-    dz = SurfaceCoefficient(0.)
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r2 = SurfaceCoefficient("r2")
+    dx = SurfaceCoefficient(1.0)
+    dy = SurfaceCoefficient(0.0)
+    dz = SurfaceCoefficient(0.0)
 
     def _get_base_coeffs(self):
         x0, y0, z0, r2 = self.x0, self.y0, self.z0, self.r2
 
         a = -r2
-        b = c = 1.
-        d = e = f = 0.
-        g, h, j = 2*x0*r2, -2*y0, -2*z0
-        k = y0*y0 + z0*z0 - r2*x0*x0
+        b = c = 1.0
+        d = e = f = 0.0
+        g, h, j = 2 * x0 * r2, -2 * y0, -2 * z0
+        k = y0 * y0 + z0 * z0 - r2 * x0 * x0
 
         return (a, b, c, d, e, f, g, h, j, k)
 
@@ -2000,7 +2034,7 @@ class XCone(QuadricMixin, Surface):
         x = point[0] - self.x0
         y = point[1] - self.y0
         z = point[2] - self.z0
-        return y*y + z*z - self.r2*x*x
+        return y * y + z * z - self.r2 * x * x
 
 
 class YCone(QuadricMixin, Surface):
@@ -2021,7 +2055,7 @@ class YCone(QuadricMixin, Surface):
         z-coordinate of the apex in [cm]. Defaults to 0.
     r2 : float, optional
         Parameter related to the aperture [:math:`\\rm cm^2`].
-        It can be interpreted as the increase in the radius squared per cm along 
+        It can be interpreted as the increase in the radius squared per cm along
         the cone's axis of revolution.
     boundary_type : {'transmission, 'vacuum', 'reflective', 'white'}, optional
         Boundary condition that defines the behavior for particles hitting the
@@ -2063,14 +2097,13 @@ class YCone(QuadricMixin, Surface):
 
     """
 
-    _type = 'y-cone'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r2')
+    _type = "y-cone"
+    _coeff_keys = ("x0", "y0", "z0", "r2")
 
-    def __init__(self, x0=0., y0=0., z0=0., r2=1., *args, **kwargs):
-        R2 = kwargs.pop('R2', None)
+    def __init__(self, x0=0.0, y0=0.0, z0=0.0, r2=1.0, *args, **kwargs):
+        R2 = kwargs.pop("R2", None)
         if R2 is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r2', 'R2'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r2", "R2"), FutureWarning)
             r2 = R2
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -2078,22 +2111,22 @@ class YCone(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, y0, z0, r2)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r2 = SurfaceCoefficient('r2')
-    dx = SurfaceCoefficient(0.)
-    dy = SurfaceCoefficient(1.)
-    dz = SurfaceCoefficient(0.)
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r2 = SurfaceCoefficient("r2")
+    dx = SurfaceCoefficient(0.0)
+    dy = SurfaceCoefficient(1.0)
+    dz = SurfaceCoefficient(0.0)
 
     def _get_base_coeffs(self):
         x0, y0, z0, r2 = self.x0, self.y0, self.z0, self.r2
 
         b = -r2
-        a = c = 1.
-        d = e = f = 0.
-        g, h, j = -2*x0, 2*y0*r2, -2*z0
-        k = x0*x0 + z0*z0 - r2*y0*y0
+        a = c = 1.0
+        d = e = f = 0.0
+        g, h, j = -2 * x0, 2 * y0 * r2, -2 * z0
+        k = x0 * x0 + z0 * z0 - r2 * y0 * y0
 
         return (a, b, c, d, e, f, g, h, j, k)
 
@@ -2101,7 +2134,7 @@ class YCone(QuadricMixin, Surface):
         x = point[0] - self.x0
         y = point[1] - self.y0
         z = point[2] - self.z0
-        return x*x + z*z - self.r2*y*y
+        return x * x + z * z - self.r2 * y * y
 
 
 class ZCone(QuadricMixin, Surface):
@@ -2164,14 +2197,13 @@ class ZCone(QuadricMixin, Surface):
 
     """
 
-    _type = 'z-cone'
-    _coeff_keys = ('x0', 'y0', 'z0', 'r2')
+    _type = "z-cone"
+    _coeff_keys = ("x0", "y0", "z0", "r2")
 
-    def __init__(self, x0=0., y0=0., z0=0., r2=1., *args, **kwargs):
-        R2 = kwargs.pop('R2', None)
+    def __init__(self, x0=0.0, y0=0.0, z0=0.0, r2=1.0, *args, **kwargs):
+        R2 = kwargs.pop("R2", None)
         if R2 is not None:
-            warn(_WARNING_UPPER.format(type(self).__name__, 'r2', 'R2'),
-                 FutureWarning)
+            warn(_WARNING_UPPER.format(type(self).__name__, "r2", "R2"), FutureWarning)
             r2 = R2
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
@@ -2179,22 +2211,22 @@ class ZCone(QuadricMixin, Surface):
         for key, val in zip(self._coeff_keys, (x0, y0, z0, r2)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    r2 = SurfaceCoefficient('r2')
-    dx = SurfaceCoefficient(0.)
-    dy = SurfaceCoefficient(0.)
-    dz = SurfaceCoefficient(1.)
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    r2 = SurfaceCoefficient("r2")
+    dx = SurfaceCoefficient(0.0)
+    dy = SurfaceCoefficient(0.0)
+    dz = SurfaceCoefficient(1.0)
 
     def _get_base_coeffs(self):
         x0, y0, z0, r2 = self.x0, self.y0, self.z0, self.r2
 
         c = -r2
-        a = b = 1.
-        d = e = f = 0.
-        g, h, j = -2*x0, -2*y0, 2*z0*r2
-        k = x0*x0 + y0*y0 - r2*z0*z0
+        a = b = 1.0
+        d = e = f = 0.0
+        g, h, j = -2 * x0, -2 * y0, 2 * z0 * r2
+        k = x0 * x0 + y0 * y0 - r2 * z0 * z0
 
         return (a, b, c, d, e, f, g, h, j, k)
 
@@ -2202,7 +2234,7 @@ class ZCone(QuadricMixin, Surface):
         x = point[0] - self.x0
         y = point[1] - self.y0
         z = point[2] - self.z0
-        return x*x + y*y - self.r2*z*z
+        return x * x + y * y - self.r2 * z * z
 
 
 class Quadric(QuadricMixin, Surface):
@@ -2247,27 +2279,40 @@ class Quadric(QuadricMixin, Surface):
 
     """
 
-    _type = 'quadric'
-    _coeff_keys = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k')
+    _type = "quadric"
+    _coeff_keys = ("a", "b", "c", "d", "e", "f", "g", "h", "j", "k")
 
-    def __init__(self, a=0., b=0., c=0., d=0., e=0., f=0., g=0., h=0., j=0.,
-                 k=0., *args, **kwargs):
+    def __init__(
+        self,
+        a=0.0,
+        b=0.0,
+        c=0.0,
+        d=0.0,
+        e=0.0,
+        f=0.0,
+        g=0.0,
+        h=0.0,
+        j=0.0,
+        k=0.0,
+        *args,
+        **kwargs,
+    ):
         kwargs = _future_kwargs_warning_helper(type(self), *args, **kwargs)
         super().__init__(**kwargs)
 
         for key, val in zip(self._coeff_keys, (a, b, c, d, e, f, g, h, j, k)):
             setattr(self, key, val)
 
-    a = SurfaceCoefficient('a')
-    b = SurfaceCoefficient('b')
-    c = SurfaceCoefficient('c')
-    d = SurfaceCoefficient('d')
-    e = SurfaceCoefficient('e')
-    f = SurfaceCoefficient('f')
-    g = SurfaceCoefficient('g')
-    h = SurfaceCoefficient('h')
-    j = SurfaceCoefficient('j')
-    k = SurfaceCoefficient('k')
+    a = SurfaceCoefficient("a")
+    b = SurfaceCoefficient("b")
+    c = SurfaceCoefficient("c")
+    d = SurfaceCoefficient("d")
+    e = SurfaceCoefficient("e")
+    f = SurfaceCoefficient("f")
+    g = SurfaceCoefficient("g")
+    h = SurfaceCoefficient("h")
+    j = SurfaceCoefficient("j")
+    k = SurfaceCoefficient("k")
 
     def _get_base_coeffs(self):
         return tuple(getattr(self, c) for c in self._coeff_keys)
@@ -2275,19 +2320,20 @@ class Quadric(QuadricMixin, Surface):
 
 class TorusMixin:
     """A Mixin class implementing common functionality for torus surfaces"""
-    _coeff_keys = ('x0', 'y0', 'z0', 'a', 'b', 'c')
 
-    def __init__(self, x0=0., y0=0., z0=0., a=0., b=0., c=0., **kwargs):
+    _coeff_keys = ("x0", "y0", "z0", "a", "b", "c")
+
+    def __init__(self, x0=0.0, y0=0.0, z0=0.0, a=0.0, b=0.0, c=0.0, **kwargs):
         super().__init__(**kwargs)
         for key, val in zip(self._coeff_keys, (x0, y0, z0, a, b, c)):
             setattr(self, key, val)
 
-    x0 = SurfaceCoefficient('x0')
-    y0 = SurfaceCoefficient('y0')
-    z0 = SurfaceCoefficient('z0')
-    a = SurfaceCoefficient('a')
-    b = SurfaceCoefficient('b')
-    c = SurfaceCoefficient('c')
+    x0 = SurfaceCoefficient("x0")
+    y0 = SurfaceCoefficient("y0")
+    z0 = SurfaceCoefficient("z0")
+    a = SurfaceCoefficient("a")
+    b = SurfaceCoefficient("b")
+    c = SurfaceCoefficient("c")
 
     def translate(self, vector, inplace=False):
         surf = self if inplace else self.clone()
@@ -2296,13 +2342,13 @@ class TorusMixin:
         surf.z0 += vector[2]
         return surf
 
-    def rotate(self, rotation, pivot=(0., 0., 0.), order='xyz', inplace=False):
+    def rotate(self, rotation, pivot=(0.0, 0.0, 0.0), order="xyz", inplace=False):
         pivot = np.asarray(pivot)
         rotation = np.asarray(rotation, dtype=float)
 
         # Allow rotation matrix to be passed in directly, otherwise build it
         if rotation.ndim == 2:
-            check_length('surface rotation', rotation.ravel(), 9)
+            check_length("surface rotation", rotation.ravel(), 9)
             Rmat = rotation
         else:
             Rmat = get_rotation_matrix(rotation, order=order)
@@ -2310,7 +2356,7 @@ class TorusMixin:
         # Only can handle trivial rotation matrices
         close = np.isclose
         if not np.all(close(Rmat, -1.0) | close(Rmat, 0.0) | close(Rmat, 1.0)):
-            raise NotImplementedError('Torus surfaces cannot handle generic rotations')
+            raise NotImplementedError("Torus surfaces cannot handle generic rotations")
 
         # Translate surface to pivot
         surf = self.translate(-pivot, inplace=inplace)
@@ -2318,7 +2364,7 @@ class TorusMixin:
         # Determine "center" of torus and a point above it (along main axis)
         center = [surf.x0, surf.y0, surf.z0]
         above_center = center.copy()
-        index = ['x-torus', 'y-torus', 'z-torus'].index(surf._type)
+        index = ["x-torus", "y-torus", "z-torus"].index(surf._type)
         above_center[index] += 1
 
         # Compute new rotated torus center
@@ -2331,13 +2377,15 @@ class TorusMixin:
 
         # Create rotated torus
         kwargs = {
-            'boundary_type': surf.boundary_type,
-            'albedo': surf.albedo,
-            'name': surf.name,
-            'a': surf.a, 'b': surf.b, 'c': surf.c
+            "boundary_type": surf.boundary_type,
+            "albedo": surf.albedo,
+            "name": surf.name,
+            "a": surf.a,
+            "b": surf.b,
+            "c": surf.c,
         }
         if inplace:
-            kwargs['surface_id'] = surf.id
+            kwargs["surface_id"] = surf.id
         surf = cls(x0=center[0], y0=center[1], z0=center[2], **kwargs)
 
         return surf.translate(pivot, inplace=inplace)
@@ -2398,7 +2446,8 @@ class XTorus(TorusMixin, Surface):
         Type of the surface
 
     """
-    _type = 'x-torus'
+
+    _type = "x-torus"
 
     def evaluate(self, point):
         x = point[0] - self.x0
@@ -2407,17 +2456,17 @@ class XTorus(TorusMixin, Surface):
         a = self.a
         b = self.b
         c = self.c
-        return (x*x)/(b*b) + (math.sqrt(y*y + z*z) - a)**2/(c*c) - 1
+        return (x * x) / (b * b) + (math.sqrt(y * y + z * z) - a) ** 2 / (c * c) - 1
 
     def bounding_box(self, side):
         x0, y0, z0 = self.x0, self.y0, self.z0
         a, b, c = self.a, self.b, self.c
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([x0 - b, y0 - a - c, z0 - a - c]),
-                np.array([x0 + b, y0 + a + c, z0 + a + c])
+                np.array([x0 + b, y0 + a + c, z0 + a + c]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
 
@@ -2473,7 +2522,8 @@ class YTorus(TorusMixin, Surface):
         Type of the surface
 
     """
-    _type = 'y-torus'
+
+    _type = "y-torus"
 
     def evaluate(self, point):
         x = point[0] - self.x0
@@ -2482,17 +2532,17 @@ class YTorus(TorusMixin, Surface):
         a = self.a
         b = self.b
         c = self.c
-        return (y*y)/(b*b) + (math.sqrt(x*x + z*z) - a)**2/(c*c) - 1
+        return (y * y) / (b * b) + (math.sqrt(x * x + z * z) - a) ** 2 / (c * c) - 1
 
     def bounding_box(self, side):
         x0, y0, z0 = self.x0, self.y0, self.z0
         a, b, c = self.a, self.b, self.c
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([x0 - a - c, y0 - b, z0 - a - c]),
-                np.array([x0 + a + c, y0 + b, z0 + a + c])
+                np.array([x0 + a + c, y0 + b, z0 + a + c]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
 
@@ -2548,7 +2598,7 @@ class ZTorus(TorusMixin, Surface):
         Type of the surface
     """
 
-    _type = 'z-torus'
+    _type = "z-torus"
 
     def evaluate(self, point):
         x = point[0] - self.x0
@@ -2557,17 +2607,17 @@ class ZTorus(TorusMixin, Surface):
         a = self.a
         b = self.b
         c = self.c
-        return (z*z)/(b*b) + (math.sqrt(x*x + y*y) - a)**2/(c*c) - 1
+        return (z * z) / (b * b) + (math.sqrt(x * x + y * y) - a) ** 2 / (c * c) - 1
 
     def bounding_box(self, side):
         x0, y0, z0 = self.x0, self.y0, self.z0
         a, b, c = self.a, self.b, self.c
-        if side == '-':
+        if side == "-":
             return BoundingBox(
                 np.array([x0 - a - c, y0 - a - c, z0 - b]),
-                np.array([x0 + a + c, y0 + a + c, z0 + b])
+                np.array([x0 + a + c, y0 + a + c, z0 + b]),
             )
-        elif side == '+':
+        elif side == "+":
             return BoundingBox.infinite()
 
 
@@ -2625,7 +2675,7 @@ class Halfspace(Region):
             return Union((self, other))
 
     def __invert__(self):
-        return -self.surface if self.side == '+' else +self.surface
+        return -self.surface if self.side == "+" else +self.surface
 
     def __contains__(self, point):
         """Check whether a point is contained in the half-space.
@@ -2643,7 +2693,7 @@ class Halfspace(Region):
         """
 
         val = self.surface.evaluate(point)
-        return val >= 0. if self.side == '+' else val < 0.
+        return val >= 0.0 if self.side == "+" else val < 0.0
 
     @property
     def surface(self):
@@ -2651,7 +2701,7 @@ class Halfspace(Region):
 
     @surface.setter
     def surface(self, surface):
-        check_type('surface', surface, Surface)
+        check_type("surface", surface, Surface)
         self._surface = surface
 
     @property
@@ -2660,7 +2710,7 @@ class Halfspace(Region):
 
     @side.setter
     def side(self, side):
-        check_value('side', side, ('+', '-'))
+        check_value("side", side, ("+", "-"))
         self._side = side
 
     @property
@@ -2668,8 +2718,7 @@ class Halfspace(Region):
         return self.surface.bounding_box(self.side)
 
     def __str__(self):
-        return '-' + str(self.surface.id) if self.side == '-' \
-            else str(self.surface.id)
+        return "-" + str(self.surface.id) if self.side == "-" else str(self.surface.id)
 
     def get_surfaces(self, surfaces=None):
         """
@@ -2758,8 +2807,9 @@ class Halfspace(Region):
         # Return translated half-space
         return type(self)(memo[key], self.side)
 
-    def rotate(self, rotation, pivot=(0., 0., 0.), order='xyz', inplace=False,
-               memo=None):
+    def rotate(
+        self, rotation, pivot=(0.0, 0.0, 0.0), order="xyz", inplace=False, memo=None
+    ):
         r"""Rotate surface by angles provided or by applying matrix directly.
 
         .. versionadded:: 0.12
@@ -2803,8 +2853,9 @@ class Halfspace(Region):
         # If rotated surface not in memo, add it
         key = (self.surface, tuple(np.ravel(rotation)), tuple(pivot), order, inplace)
         if key not in memo:
-            memo[key] = self.surface.rotate(rotation, pivot=pivot, order=order,
-                                            inplace=inplace)
+            memo[key] = self.surface.rotate(
+                rotation, pivot=pivot, order=order, inplace=inplace
+            )
 
         # Return rotated half-space
         return type(self)(memo[key], self.side)
